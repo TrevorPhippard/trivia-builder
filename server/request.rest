@@ -1,0 +1,214 @@
+
+### test ------------------------------------------------------
+
+###
+GET http://localhost:3000/api/v1/test/1  HTTP/1.1
+
+
+### AUTH ---------------------------------------------
+
+###
+POST http://localhost:3000/api/v1/auth/signup HTTP/1.1
+Content-Type: application/json
+
+  {
+    "account_id": 0,
+    "user_name": "duck",
+    "email": "duck@pond.com",
+    "password": "quack"
+}
+
+###
+POST http://localhost:3000/api/v1/auth/signin HTTP/1.1
+Content-Type: application/json
+
+{
+    "email": "duck@pond.com", 
+    "password": "quack"
+}
+
+### Files ------------------------------------------------------
+
+###
+GET http://localhost:3000/api/v1/file  HTTP/1.1
+
+###
+
+### Resource ------------------------------------------------------
+
+###
+GET http://localhost:3000/api/v1/resources  HTTP/1.1
+
+
+###
+GET http://localhost:3000/api/v1/resources/1  HTTP/1.1
+
+
+###
+POST http://localhost:3000/api/v1/resources HTTP/1.1
+Content-Type: application/json
+
+{
+    "owner":1,
+    "file_name": "file1"
+}
+
+###
+PUT http://localhost:3000/api/v1/resources/1  HTTP/1.1
+Content-Type: application/json
+
+{
+    "owner":2,
+    "file_name": "file1"
+}
+###
+DELETE  http://localhost:3000/api/v1/resources/1 HTTP/1.1
+Content-Type: application/json
+
+### Room  ------------------------------------------------------
+
+
+POST http://localhost:3000/api/v1/room/isalready HTTP/1.1
+Content-Type: application/json
+
+{
+    "owner":"t",
+    "room_id":"333"
+}
+
+###
+GET http://localhost:3000/api/v1/room  HTTP/1.1
+
+
+###
+GET http://localhost:3000/api/v1/room/active-users  HTTP/1.1
+
+###
+POST http://localhost:3000/api/v1/room HTTP/1.1
+Content-Type: application/json
+
+{
+    "socket_id": "string",
+    "owner": 1,
+    "user_collection": 1
+}
+
+###
+DELETE http://localhost:3000/api/v1/room/37 HTTP/1.1
+Content-Type: application/json
+
+### Messages ------------------------------------------------------
+
+###
+GET http://localhost:3000/api/v1/messages  HTTP/1.1
+
+
+###
+GET http://localhost:3000/api/v1/messages/1  HTTP/1.1
+
+###
+POST http://localhost:3000/api/v1/messages HTTP/1.1
+Content-Type: application/json
+
+{
+    "user_id": 1,
+    "room_id": 1,
+    "body_text": "23"
+}
+
+###
+DELETE http://localhost:3000/api/v1/messages/2 HTTP/1.1
+Content-Type: application/json
+
+
+### Question ------------------------------------------------------
+
+###
+GET http://localhost:3000/api/v1/questions  HTTP/1.1
+
+
+###
+POST http://localhost:3000/api/v1/questions HTTP/1.1
+Content-Type: application/json
+
+{
+    "slide_rank":1,
+    "owner": 1,
+    "trivia": 1,
+    "category": 1,
+    "type": "multiple",
+    "question": "what",
+    "options": "test",
+    "answer": "2",
+    "bgImg": "string"
+}
+
+
+
+### Trivia ------------------------------------------------------
+
+###
+GET http://localhost:3000/api/v1/trivia  HTTP/1.1
+
+###
+GET http://localhost:3000/api/v1/trivia/25  HTTP/1.1
+
+###
+POST http://localhost:3000/api/v1/trivia HTTP/1.1
+Content-Type: application/json
+
+{
+    "owner": 1,
+    "trivia_name": "string",
+    "question_collection": 1,
+    "bg_bcolour": "string",
+    "text_colour": "string"
+}
+
+###
+DELETE http://localhost:3000/api/v1/trivia/21 HTTP/1.1
+Content-Type: application/json
+
+
+### User ------------------------------------------------------
+
+###
+GET http://localhost:3000/api/v1/users  HTTP/1.1
+
+###
+POST http://localhost:3000/api/v1/users HTTP/1.1
+Content-Type: application/json
+
+{
+    "account_id": 1,
+    "user_name": "string",
+    "email": "string",
+    "password": "string"
+}
+
+###
+DELETE http://localhost:3000/api/v1/users/23 HTTP/1.1
+Content-Type: application/json
+
+
+### Account ------------------------------------------------------
+
+###
+GET http://localhost:3000/api/v1/account  HTTP/1.1
+
+###
+POST http://localhost:3000/api/v1/account HTTP/1.1
+Content-Type: application/json
+
+{
+    "following_user_id": "number",
+    "followed_user_id": "number",
+    "description": "string",
+    "avatar": "string"
+}
+
+###
+DELETE http://localhost:3000/api/v1/account/23 HTTP/1.1
+Content-Type: application/json
+
+

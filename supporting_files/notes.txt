@@ -1,0 +1,9 @@
+
+CMDs
+
+docker run
+--name=postgrescontainer
+-e POSTGRES_PASSWORD=checkenvfile
+-d
+-p 5432:5432
+-v mypostgresdata:/var/lib/postgresql/data postgres:latest
