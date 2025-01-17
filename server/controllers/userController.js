@@ -35,6 +35,7 @@ export const signInUser = async (email, password) => {
   if (!user) return { status: 400, message: 'Email is not correct' };
 
   const validPassword = await bcrypt.compare(password, user.password);
+
   if (!validPassword) return { status: 400, message: 'Invalid password' };
 
   const currentTime = Math.floor(Date.now() / 1000);

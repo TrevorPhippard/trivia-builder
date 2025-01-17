@@ -10,7 +10,7 @@ Table account {
 
 Table users {
   id integer [primary key]
-  username varchar
+  user_name varchar
   email varchar
   password varchar
 }
@@ -32,7 +32,7 @@ Table room {
   id integer [primary key]
   socket_id varchar
   user_id varchar
-  username varchar
+  user_name varchar
   room_id varchar
   online boolean
 }
@@ -76,4 +76,4 @@ Ref: "trivia"."owner" < "users"."id"
 
 Ref: "question"."owner" < "users"."id"
 
-Ref: "question"."trivia_id" < "trivia"."id"
+Ref: "question"."trivia" < "trivia"."id"

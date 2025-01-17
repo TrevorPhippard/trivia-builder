@@ -6,7 +6,8 @@ class SocketioService {
 
   constructor() { }
 
-  setupSocketConnection({ token, room, username }: connectConfig) {
+  setupSocketConnection({ token, room, user_name }: connectConfig) {
+
     this.socket = io(import.meta.env.VITE_SOCKET_ENDPOINT, {
       auth: { token },
       withCredentials: true,
@@ -14,12 +15,13 @@ class SocketioService {
         "socket-header": "abcd"
       }
     });
-    console.log(`Connecting socket...`, { username, room });
+    console.log(`Connecting socket...`, { token, room, user_name});
   }
 
-  joinRoom(room: string, username: string, user_id: string) {
+  joinRoom(room: string, user_name: string, user_id: string) {
+    console.log('join', { room, user_name, user_id })
     this.socket.emit('leave', { room_id: room, user_id: user_id, socketId: this.socket.id });
-    this.socket.emit('join', { room_id: room, username: username, user_id: user_id });
+    this.socket.emit('join', { room_id: room, user_name: user_name, user_id: user_id });
   }
 
   invite(toUser: string, fromUser: string, room: string) {
@@ -37,11 +39,11 @@ class SocketioService {
 
   subscribeToSocketActions(cb: (err: null, message: object) => void) {
     if (!this.socket) return (true);
-    this.socket.on('join', (socketMsg: string) => cb(null, { username: socketMsg, type: 'join' }));
+    this.socket.on('join', (socketMsg: string) => cb(null, { user_name: socketMsg, type: 'join' }));
     this.socket.on('enteredRoom', (socketMsg: string) => cb(null, { userList: socketMsg, type: 'enteredRoom' }));
     this.socket.on('messageFromServer', (socketMsg: string) => cb(null, { message: socketMsg, type: 'join' }));
     this.socket.on('broadcast', (socketMsg: string) => cb(null, { data: socketMsg, type: 'broadcast' }));
-    this.socket.on('disconnected', (socketMsg: string) => cb(null, { username: socketMsg, type: 'disconnected' }));
+    this.socket.on('disconnected', (socketMsg: string) => cb(null, { user_name: socketMsg, type: 'disconnected' }));
   }
 
   sendMessage(message: messageType, cb: noArg) {

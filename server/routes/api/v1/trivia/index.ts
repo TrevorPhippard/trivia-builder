@@ -7,26 +7,26 @@ const Controller = new BaseController(Model);
 const router = express.Router();
 
 router.get("/", async (req: any, res: any) => {
-    // try {
+    try {
     const entries = await Controller.getAllEntries()
     return res.json(entries);
-    // } catch (error) {
-    //     return res.status(500).send("Internal Server Error");
-    // }
+    } catch (error) {
+        return res.status(500).send(error);
+    }
 })
 
 router.post("/", async (req: any, res: any) => {
-    // try {
+    try {
     const { owner, trivia_name, question_collection, bg_bcolour, text_colour } = req.body;
     const result = await Controller.addEntry({ owner, trivia_name, question_collection, bg_bcolour, text_colour })
     return res.status(200).json(result);
-    // } catch (error) {
-    //     return res.status(500).send("Internal Server Error");
-    // }
+    } catch (error) {
+        return res.status(500).send(error);
+    }
 });
 
 router.get("/:id", async (req: any, res: any) => {
-    // try {
+    try {
     const id = req.params.id;
     const result = await Controller.getEntryById(id)
     if (!result) {
@@ -34,13 +34,13 @@ router.get("/:id", async (req: any, res: any) => {
     } else {
         return res.json(result);
     }
-    // } catch (error) {
-    //     return res.status(500).send("Internal Server Error");
-    // }
+    } catch (error) {
+        return res.status(500).send(error);
+    }
 })
 
 router.put("/:id", async (req: any, res: any) => {
-    // try {
+    try {
     const routeId = Number(req.params.id);
     const { owner, trivia_name, question_collection, bg_bcolour, text_colour } = req.body;
     const result = await Controller.updateEntryById(routeId, { owner, trivia_name, question_collection, bg_bcolour, text_colour })
@@ -49,13 +49,13 @@ router.put("/:id", async (req: any, res: any) => {
     } else {
         return res.json(result);
     }
-    // } catch (error) {
-    //     return res.status(500).send("Internal Server Error");
-    // }
+    } catch (error) {
+        return res.status(500).send(error);
+    }
 })
 
 router.delete("/:id", async (req: any, res: any) => {
-    // try {
+    try {
     const routeId = req.params.id;
     const result = await Controller.removeEntryById(routeId);
     const resultingList = await Controller.getAllEntries();
@@ -70,9 +70,9 @@ router.delete("/:id", async (req: any, res: any) => {
 
         return res.send(response);
     }
-    // } catch (error) {
-    //     return res.status(500).send("Internal Server Error");
-    // }
+    } catch (error) {
+        return res.status(500).send(error);
+    }
 });
 
 export default router;

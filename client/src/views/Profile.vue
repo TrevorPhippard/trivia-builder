@@ -12,7 +12,7 @@ import ChatMessage from "../components/ChatMessage.vue";
 const editorStore = useEditorStore();
 const socketStore =  useSocketStore();
 
-const {getUserList: userList, getMsgList: msgList }= storeToRefs(socketStore);
+const {getUserList: userList, getMsgList: msgList } = storeToRefs(socketStore);
 
 onMounted(function () {
   editorStore.fetchGameFromDatabase();

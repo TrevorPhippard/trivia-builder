@@ -18,7 +18,7 @@ declare global {
   interface connectConfig {
     token: string;
     room: string;
-    username: string;
+    user_name: string;
     user_id: string;
   }
 
@@ -26,11 +26,11 @@ declare global {
   interface messageType {
     room_id: string;
     user_id: string;
-    message_body: string;
+    body_text: string;
   }
 
   interface userPassageType {
-    username: string;
+    user_name: string;
     type: string;
     data?: {
       user_id: string;
@@ -49,7 +49,7 @@ export const useSocketStore = defineStore("sockets", {
     roomMessages: [] as any[],
     //channels
     chat_room: "chat",
-    activeUsers_room: "active-users",
+    activeUsers_room: 0,
     gameRoom_id: "game-room",
     invitation: [] as any[]
   }),
@@ -71,16 +71,19 @@ export const useSocketStore = defineStore("sockets", {
         });
     },
 
-    joinRoom({ room, username, user_id }: connectConfig) {
-      SocketioService.joinRoom(room, username, user_id)
+    joinRoom({ room, user_name, user_id }: connectConfig) {
+      console.log({room, user_name, user_id})
+      SocketioService.joinRoom(room, user_name, user_id)
     },
 
     socketActions(_err: any, message: any) {
+      console.log(message.type)
       switch (message.type) {
         case "enteredRoom":
         case "join":
         case "disconnected":
           RoomService.fetchRoomById(this.activeUsers_room).then((activeUsers: any) => {
+            console.log({activeUsers: this.activeUsers})
             this.activeUsers = activeUsers;
           });
           break;

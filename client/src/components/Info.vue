@@ -23,7 +23,7 @@ const placeholderAvatar = import.meta.env.VITE_BASE_ENDPOINT + "images/b.jpg"
     <div class="lb-action"><i class="materiaiconscons">edit</i></div>
   </div>
   <div id="i-box">
-    <div id="u-occ">Username: {{ userInfo.user_name }}</div>
+    <div id="u-occ">user_name: {{ userInfo.user_name }}</div>
     <div id="u-occ">First you get the water, than you get the wemons</div>
     <div id="u-loc"><i class="materiaiconscons">location: </i><a href="#">Pond</a>, <a href="#">Plesantville</a></div>
   </div>

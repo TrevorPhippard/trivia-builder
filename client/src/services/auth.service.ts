@@ -8,7 +8,6 @@ interface User {
   user_name?: string;
 }
 
-
 const AuthService = {
   login:  (user: User | null)=>{
     return axios.post(endpoint + "signin", user)

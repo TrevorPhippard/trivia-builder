@@ -7,7 +7,7 @@ import { useRouter } from "vue-router";
 const authStore = useAuthStore();
 const router = useRouter();
 
-const username = ref();
+const user_name = ref();
 const email = ref();
 const password = ref();
 const error = ref("");
@@ -15,7 +15,7 @@ const error = ref("");
 function submitToken() {
   const formData = {
     "account_id":0,
-    "user_name": username.value,
+    "user_name": user_name.value,
     "email": email.value,
     "password": password.value
   }
@@ -39,7 +39,7 @@ function backToLanding() {
 <template>
   <div class="card-bg">
     <form @submit.prevent="">
-      <input type="text" placeholder="username" v-model="username" required>
+      <input type="text" placeholder="user_name" v-model="user_name" required>
       <input type="email" placeholder="email" v-model="email" required>
       <input type="password" placeholder="password" v-model="password" required>
       <div class="buttonsCont">

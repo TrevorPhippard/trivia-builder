@@ -1,5 +1,8 @@
 import express from "express";
 import Model from "../../../../models/user.model";
+import accountModel from "../../../../models/account.model";
+import triviaModel from "../../../../models/trivia.model";
+
 import BaseController from "../../../../controllers/baseController";
 
 const Controller = new BaseController(Model);
@@ -7,56 +10,70 @@ const Controller = new BaseController(Model);
 const router = express.Router();
 
 router.get("/", async (req:any, res:any) => {
-    // try {
+    try {
         const entries = await Controller.getAllEntries()
         return res.json(entries);
-    // } catch (error) {
-    //     return res.status(500).send("Internal Server Error");
-    // }
+    } catch (error) {
+        return res.status(500).send(error);
+    }
 })
 
 router.post("/", async (req:any, res:any) => {
-    // try {
+    try {
         const { user_name, email, password } = req.body;
         const result = await Controller.addEntry({ user_name, email, password })
         return res.status(200).json(result);
-    // } catch (error) {
-    //     return res.status(500).send("Internal Server Error");
-    // }
+    } catch (error) {
+        return res.status(500).send(error);
+    }
 });
 
 
 
 router.get("/:id", async (req:any, res:any) => {
-    // try {
-        const result = await Controller.getEntryById(req.params.id)
+
+        const query = {
+            attributes: ["user_name", "email"],
+            where: { user_name: req.params.id },
+            include: [
+                {
+                    model: accountModel,
+                    as: 'account',
+                    attributes: ["description", "avatar"]
+                },
+                {
+                    model: triviaModel,
+                    as: 'trivia',
+                    attributes: ["id", "owner", "trivia_name", "question_collection", "bg_bcolour", "text_colour"]
+                },
+            ]
+    
+        }
+
+    try {
+        const result = await Controller.getEntryByQuery(query)
         if (!result) {
             return res.status(404).send("item not found");
         } else {
             return res.json(result);
         }
-    // } catch (error) {
-    //     return res.status(500).send("Internal Server Error");
-    // }
+    } catch (error) {
+        return res.status(500).send(error);
+    }
 })
 
-router.get("/:id", async (req:any, res:any) => {
-
-    // try {
-        const result = await Controller.getEntryByQuery(req.params.id)
-        if (!result) {
-            return res.status(404).send("item not found");
-        } else {
-            return res.json(result);
-        }
-    // } catch (error) {
-    //     return res.status(500).send("Internal Server Error");
-    // }
-})
+// router.get("/:id", async (req:any, res:any) => {
+//         const result = await Controller.getEntryById(req.params.id)
+//         if (!result) {
+//             return res.status(404).send("item not found");
+//         } else {
+//             return res.json(result);
+//         }
+// })
 
 
 router.put("/:id", async (req:any, res:any) => {
-    // try {
+    try {
         const routeId = Number(req.params.id);
         const { id, user_name, email, password } = req.body;
         const result = await Controller.updateEntryById(routeId, { id, user_name, email, password })
@@ -65,14 +82,14 @@ router.put("/:id", async (req:any, res:any) => {
         } else {
             return res.json(result);
         }
-    // } catch (error) {
-    //     return res.status(500).send("Internal Server Error");
-    // }
+    } catch (error) {
+        return res.status(500).send(error);
+    }
 })
 
 
 router.delete("/:id", async (req:any, res:any) => {
-    // try {
+    try {
         const routeId = req.params.id;
         const result = await Controller.removeEntryById(routeId);
         if (!result) {
@@ -80,9 +97,9 @@ router.delete("/:id", async (req:any, res:any) => {
         } else {
             return res.send("item deleted successfully");
         }
-    // } catch (error) {
-    //     return res.status(500).send("Internal Server Error");
-    // }
+    } catch (error) {
+        return res.status(500).send(error);
+    }
 });
 
 

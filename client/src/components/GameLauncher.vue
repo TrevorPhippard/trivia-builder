@@ -34,7 +34,7 @@ function onLaunchGame(index: string) {
   editorStore.fetchGameById(index);
   gameStore.launchGame(index);
 
-  // SocketioService.joinRoom(index, user_name, id );
+  SocketioService.joinRoom(index, user_name, id );
   router.push({ path: `/game/${index}` });
 }
 

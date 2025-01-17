@@ -11,19 +11,17 @@ router.get("/", async (req: any, res: any) => {
     try {
         const entries = await Controller.getAllEntries()
         return res.json(entries);
-    } catch (_error) {
-        const error = (_error as Error);
+    } catch (error) {
         return res.status(500).send(error);
     }
 })
 
 router.post("/", async (req: any, res: any) => {
     try {
-        const { user_name, room_id, message_body } = req.body;
-        const result = await Controller.addEntry({ user_name, room_id, message_body })
+        const { user_name, room_id, body_text } = req.body;
+        const result = await Controller.addEntry({ user_name, room_id, body_text })
         return res.status(200).json(result);
-    } catch (_error) {
-        const error = (_error as Error);
+    } catch (error) {
         return res.status(500).send(error);
     }
 });
@@ -39,8 +37,7 @@ router.get("/:acct_id", async (req: any, res: any) => {
         } else {
             return res.json(result);
         }
-    } catch (_error) {
-        const error = (_error as Error);
+    } catch (error) {
         return res.status(500).send(error);
     }
 })
@@ -48,15 +45,14 @@ router.get("/:acct_id", async (req: any, res: any) => {
 router.put("/:id", async (req: any, res: any) => {
     try {
         const routeId = Number(req.params.id);
-        const { id, user_name, room_id, message_body } = req.body;
-        const result = await Controller.updateEntryById(routeId, { id, user_name, room_id, message_body })
+        const { id, user_name, room_id, body_text } = req.body;
+        const result = await Controller.updateEntryById(routeId, { id, user_name, room_id, body_text })
         if (!result) {
             return res.status(404).send("item not found");
         } else {
             return res.json(result);
         }
-    } catch (_error) {
-        const error = (_error as Error);
+    } catch (error) {
         return res.status(500).send(error);
     }
 })
@@ -70,8 +66,7 @@ router.delete("/:id", async (req: any, res: any) => {
         } else {
             return res.send("item deleted successfully");
         }
-    } catch (_error) {
-        const error = (_error as Error);
+    } catch (error) {
         return res.status(500).send(error);
     }
 });

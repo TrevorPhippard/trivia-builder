@@ -3,9 +3,11 @@ const endpoint = import.meta.env.VITE_API_ENDPOINT + "trivia";
 
 
 interface triviaData {
-  gameName: string;
-  username: string;
-  slides: string;
+  owner:	number;
+  trivia_name:	string;
+  question_collection:	number;
+  bg_bcolour:	string;
+  text_colour:	string;
 }
 
 const EditorService = {

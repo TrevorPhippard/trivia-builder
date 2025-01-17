@@ -21,26 +21,27 @@ const { getUserInfo: userInfo } = storeToRefs(authStore)
 const { getCurrentlySetGame: room_id } = storeToRefs(gameStore);
 
 function inviteUserToPlay() {
-    if (typeof user == "string" && props.info && props.info.username) {
+    if (typeof user == "string" && props.info && props.info.user_name) {
         SocketioService.invite(
-            props.info.username,
+            props.info.user_name,
             userInfo.value.user_name,
             room_id.value
         )
     } else {
-        console.error("username undefined")
+        console.error("user_name undefined")
     }
 }
 
 </script>
 <template>
-    <li v-if="info && info.username !== userInfo.user_name">
+    {{ info.owner }}
+    <li v-if="info && info.user_name !== userInfo.owner">
         <div class="iconCont">
             <div>
                 <img class="userIcon" :src="user" alt="" />
                 <div :class="`status ${props.online ? 'online' : 'offline'}`"></div>
             </div>
-            <h2>{{ info.username }}</h2>
+            <h2>{{ info.user_name }}</h2>
         </div>
         <button class="addUserBtn" v-if="lobby" @click="inviteUserToPlay">
             <p>Add </p>

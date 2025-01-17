@@ -9,8 +9,6 @@ const GameService = {
       });
   },
   quitGame:()=>{
-
-
   }
 }
 

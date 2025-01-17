@@ -10,7 +10,7 @@ const RoomController = new BaseController(RoomModel);
 async function isAlready(user_id, room_id) {
   const already = await RoomController.getEntryByQuery({
     where: {
-      [Op.and]: [{ user_id: user_id }, { room_id: room_id }],
+      // [Op.and]: [{ user_id: user_id }, { id: room_id }],
     },
   });
   return already;
@@ -19,22 +19,21 @@ async function isAlready(user_id, room_id) {
 export default function (io, socket) {
   function getRoomEntries(room_id) {
     return RoomController.getEntryByQuery({
-      where: { room_id: { [Op.eq]: room_id } },
+      // where: { id: { [Op.eq]: room_id } },
     });
   }
 
-  async function onUserJoin({ room_id, user_name, user_id }) {
+  async function onUserJoin({ room_id, user_id }) {
     socket.join(room_id);
     var IsEntry = await isAlready(user_id, room_id);
-    var online = true;
 
     var roomObj = {
+      id: room_id,
       socket_id: socket.id,
-      room_id,
-      user_name,
-      user_id,
-      online,
+      owner: user_id,
+      user_collection: room_id,
     };
+
     if (!IsEntry.length) {
       RoomController.addEntry(roomObj);
     } else {

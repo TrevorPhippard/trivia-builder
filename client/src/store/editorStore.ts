@@ -45,7 +45,7 @@ export const useEditorStore = defineStore("editor", {
     saveGameToDatabase(){
       const sendData = {
         gameName:this.gameName,
-        username:"editor",
+        user_name:"editor",
         slides:JSON.stringify(this.slides),
       }
 

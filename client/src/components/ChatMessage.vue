@@ -26,7 +26,7 @@ function submitMessage() {
   const message = {
     room_id: room_id.value,
     user_id: userInfo.value.user_name,
-    message_body: inputMessageText.value
+    body_text: inputMessageText.value
   }
 
   SocketioService.sendMessage(message, () => {
@@ -47,7 +47,7 @@ function scrollToBottom() {
       <div :class="{ sideScroll: messageList.length > 3 }" class=" messagesCont" ref="msg">
         <div v-if="messageList.length" v-for="(info, key) in messageList" :key="key">
           <div class="messageCont" v-if="info">
-            <strong> {{ info.user_id }}: </strong>{{ info.message_body }}
+            <strong> {{ info.user_id }}: </strong>{{ info.body_text }}
           </div>
         </div>
       </div>

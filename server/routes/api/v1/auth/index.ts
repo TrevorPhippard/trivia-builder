@@ -4,7 +4,7 @@ import { registerUser, signInUser } from "../../../../controllers/userController
 const router = express.Router();
 
 router.post("/signup", async (req: any, res: any) => {
-    // try {
+    try {
     const { account_id, user_name, email, password } = req.body;
     const result = await registerUser(account_id, user_name, email, password);
     if (result.status == 400) {
@@ -15,13 +15,13 @@ router.post("/signup", async (req: any, res: any) => {
             message: "user succewssfully created"
         });
     }
-    // } catch (err) {
-    //     return res.status(500).send("Registration error");
-    // }
+    } catch (error) {
+        return res.status(500).send(error);
+    }
 });
 
 router.post("/signin", async (req: any, res: any) => {
-    // try {
+    try {
     const { email, password } = req.body;
     const result = await signInUser(email, password);
 
@@ -30,9 +30,9 @@ router.post("/signin", async (req: any, res: any) => {
     } else {
         return res.header("auth-token", result.token).send(result);
     }
-    // } catch (err) {
-    //     return res.status(500).send("Sign in error");
-    // }
+    } catch (error) {
+        return res.status(500).send(error);
+    }
 });
 
 export default router;

@@ -23,8 +23,8 @@ onMounted(function () {
   if (token.value) {
     const connectConfig = {
         token: token.value,
-        room: 'active-users',
-        username: userInfo.value.user_name,
+        room: 0,
+        user_name: userInfo.value.user_name,
         user_id: userInfo.value.id
     }
 

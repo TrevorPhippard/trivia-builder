@@ -81,14 +81,14 @@ GET http://localhost:3000/api/v1/room  HTTP/1.1
 
 
 ###
-GET http://localhost:3000/api/v1/room/active-users  HTTP/1.1
+GET http://localhost:3000/api/v1/room/0  HTTP/1.1
 
 ###
 POST http://localhost:3000/api/v1/room HTTP/1.1
 Content-Type: application/json
 
 {
-    "socket_id": "string",
+    "": "string",
     "owner": 1,
     "user_collection": 1
 }
