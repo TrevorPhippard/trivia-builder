@@ -3,6 +3,9 @@ import { Model } from "sequelize";
 import connection from "../config/dbConnect";
 import resourceSchema from "./schema/resource";
 
+import Question from "./question.model"
+import User from "./user.model"
+
 interface ResourceAttributes {
 
   id?: number;
@@ -30,5 +33,8 @@ Resource.init(resourceSchema, {
   modelName: 'Resource',
   freezeTableName: true
 });
+
+// Resource.belongsTo(User, { foreignKey: 'owner' });
+Resource.hasMany(Question, { foreignKey: 'file_name' });
 
 export default Resource

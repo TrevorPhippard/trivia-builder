@@ -16,7 +16,7 @@ export default {
       allowNull: false,
       type: DataTypes.STRING
     },
-    trivia: {
+    trivia_id: {
       allowNull: false,
       type: DataTypes.INTEGER
     },

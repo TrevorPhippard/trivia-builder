@@ -12,12 +12,12 @@ export default {
       allowNull: false,
       type: DataTypes.STRING
     },
-    owner: {
+    user_id: {
       allowNull: false,
       type: DataTypes.INTEGER
     },
-    user_collection: {
+    room_name: {
       allowNull: false,
-      type: DataTypes.INTEGER
+      type: DataTypes.STRING
     }
   }

@@ -5,6 +5,7 @@ import { storeToRefs } from "pinia";
 
 import { useEditorStore } from "../store/editorStore.ts";
 import { useGameStore } from "../store/gameStore.ts";
+import { useAuthStore } from "../store/authStore.ts";
 
 // import SocketioService from "../services/socketio.service.js";
 
@@ -15,14 +16,18 @@ import trash from "../assets/trash.svg";
 
 const router = useRouter();
 
+const authStore = useAuthStore();
 const editorStore = useEditorStore();
 const gameStore = useGameStore();
 
 const { getGameList: gameList } = storeToRefs(editorStore);
+const { getUserInfo: userInfo } = storeToRefs(authStore);
 
 defineProps({
   itemsContent: Array,
 });
+
+
 
 
 function addGame() {
@@ -34,7 +39,7 @@ function onLaunchGame(index: string) {
   editorStore.fetchGameById(index);
   gameStore.launchGame(index);
 
-  SocketioService.joinRoom(index, user_name, id );
+  // SocketioService.joinRoom(index, user_name, id );
   router.push({ path: `/game/${index}` });
 }
 
@@ -47,15 +52,21 @@ function deleteGame(index: string) {
   editorStore.deleteGameFromDatabase(index);
 }
 
+function onlyMyGames(gameList: any[]){
+  return  gameList.filter(info => userInfo.value.id == info.owner )
+}
+
+
 </script>
 <template>
   <div class="game-list">
-    <div v-if="Boolean(gameList.length == 0)">
+    <div v-if="Boolean(onlyMyGames(gameList).length == 0)">
       <p> No Quizes</p>
     </div>
-    <div v-else v-for="(info, key) in gameList" :key="key">
-      <p>{{ info.gameName ? info.gameName : 'unnamed' }}</p>
+    <div v-else v-for="(info, key) in onlyMyGames(gameList)" :key="key">
+      <p>{{ info.trivia_name ? info.trivia_name : 'unnamed' }}</p>
       <ul>
+        <li>updated: {{ (new Date(info.updatedAt)).toLocaleDateString('en-US') }}</li>
         <li>id: {{ info.id }}</li>
         <li><img :src="playCircle" alt="" @click="onLaunchGame(info.id)" /></li>
         <li><img :src="edit" alt="" @click="goToEdit(info.id)" /></li>

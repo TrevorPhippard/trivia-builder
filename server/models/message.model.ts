@@ -3,6 +3,9 @@ import { Model } from "sequelize";
 import connection from "../config/dbConnect";
 import messageSchema from "./schema/message";
 
+import User from "./user.model"
+import Room from "./room.model"
+
 interface MessageAttributes {
 
   id?: number;
@@ -32,5 +35,8 @@ Message.init(messageSchema, {
   modelName: 'Message',
   freezeTableName: true
 });
+
+// Message.belongsTo(User, { foreignKey: 'user_id' });
+// Message.belongsTo(Room, { foreignKey: 'room' });
 
 export default Message

@@ -38,8 +38,8 @@ function goToRegstrationPage() {
       <input type="email" placeholder="E-Mail" v-model="email" required>
       <input type="password" placeholder="password" v-model="password" required>
       <div class="buttonsCont">
-        <button @click="goToRegstrationPage" class="secondary-button">Register</button>
         <button @click="submitToken" type="submit" class="primary-button">Login</button>
+        <button @click="goToRegstrationPage" class="secondary-button">Register</button>
       </div>
     </form>
     <p class="error">{{ error }}</p>

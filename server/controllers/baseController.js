@@ -44,6 +44,21 @@ export default class Controller {
     }
   };
 
+  updateEntryByQuery = async (query, obj) => {
+    const items = await this.model.findAll(query);
+    const item = items[0];
+
+    if (item == null) {
+      return false;
+    } else {
+      Object.keys(obj).forEach((key) => {
+        item[key] = obj[key];
+      });
+      await item.save();
+      return item;
+    }
+  };
+
   removeEntryById = async (id) => {
     const item = await this.model.findByPk(id);
     if (item == null) {

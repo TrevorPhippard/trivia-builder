@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { useEditorStore } from "../store/editorStore.ts";
 import { useSocketStore } from "../store/socketStore.ts";
@@ -14,9 +13,11 @@ const socketStore =  useSocketStore();
 
 const {getUserList: userList, getMsgList: msgList } = storeToRefs(socketStore);
 
-onMounted(function () {
-  editorStore.fetchGameFromDatabase();
-})
+socketStore.initializeSocket();
+editorStore.fetchGameFromDatabase();
+
+
+
 </script>
 
 <template>

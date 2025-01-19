@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import AuthService from "../services/auth.service"
+import RoomService from "../services/room.service.js";
 
 interface User {
   email: string;
@@ -73,7 +74,10 @@ export const useAuthStore = defineStore("auth", {
           };
           return Promise.reject(error);
         })
-    }
+    },
+    signout: (userId: any)=>{
+      RoomService.deleteRoom(userId)
+    },
 
   },
   getters: {

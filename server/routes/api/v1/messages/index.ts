@@ -17,15 +17,18 @@ router.get("/", async (req: any, res: any) => {
 })
 router.get("/:room_id", async (req: any, res: any) => {
     try {
-    const room_id = req.params.room_id;
-    const result = await Controller.getEntryByQuery({
-        where: { room_id: { [Op.eq]: room_id }, },
-    })
-    if (!result) {
-        return false
-    } else {
-        return res.json(result);
-    }
+        const room_id = req.params.room_id;
+        const query = {
+            where: { room_id: { [Op.eq]: room_id }, },
+        }
+
+        const result = await Controller.getEntryByQuery(query);
+
+        if (!result) {
+            return false
+        } else {
+            return res.json(result);
+        }
     } catch (error) {
         return res.status(500).send(error);
     }

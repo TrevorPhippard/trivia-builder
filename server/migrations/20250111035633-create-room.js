@@ -13,11 +13,11 @@ module.exports = {
       socket_id: {
         type: Sequelize.STRING,
       },
-      owner: {
+      user_id: {
         type: Sequelize.INTEGER,
       },
-      user_collection: {
-        type: Sequelize.INTEGER,
+      room_name: {
+        type: Sequelize.STRING,
       },
       createdAt: {
         allowNull: false,

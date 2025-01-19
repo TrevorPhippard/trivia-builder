@@ -32,16 +32,25 @@ function inviteUserToPlay() {
     }
 }
 
+function isUserActive(){
+    if(props.info){
+        var name1 = props.info.User.user_name ;
+        var name2 = userInfo.value.user_name;
+        return name1 === name2
+    }else{
+        return false;
+    }
+}
+
 </script>
 <template>
-    {{ info.owner }}
-    <li v-if="info && info.user_name !== userInfo.owner">
+    <li v-if="info && !isUserActive()">
         <div class="iconCont">
             <div>
                 <img class="userIcon" :src="user" alt="" />
                 <div :class="`status ${props.online ? 'online' : 'offline'}`"></div>
             </div>
-            <h2>{{ info.user_name }}</h2>
+            <h2>{{ info.User.user_name }}</h2>
         </div>
         <button class="addUserBtn" v-if="lobby" @click="inviteUserToPlay">
             <p>Add </p>

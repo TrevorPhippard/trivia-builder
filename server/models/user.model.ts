@@ -2,7 +2,12 @@
 import { Model } from "sequelize";
 import connection from "../config/dbConnect";
 import userSchema from "./schema/user";
+
 import Account from './account.model';
+import Message from "./message.model"
+import Question from "./question.model"
+import Resource from "./resource.model"
+import Room from "./room.model"
 import Trivia from "./trivia.model";
 
 interface UserAttributes {
@@ -37,15 +42,14 @@ User.init(userSchema, {
   freezeTableName: true
 });
 
+User.hasMany(Message, { foreignKey: 'user_id' });
+User.hasMany(Resource, { foreignKey: 'owner' });
+User.hasMany(Trivia, { foreignKey: 'owner' });
+User.hasMany(Question, { foreignKey: 'owner' });
 
-User.belongsTo(Account, {
-  foreignKey: 'account_id',
-  as: 'account'
-});
 
-User.belongsTo(Trivia, {
-  foreignKey: 'account_id',
-  as: 'trivia'
-});
+
+User.hasMany(Account, { foreignKey: 'following_user_id' });
+User.hasMany(Account, { foreignKey: 'followed_user_id' });
 
 export default User

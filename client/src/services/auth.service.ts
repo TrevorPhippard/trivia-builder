@@ -1,5 +1,6 @@
 import axios from "axios";
 const endpoint = import.meta.env.VITE_API_ENDPOINT + "auth/";
+const endpointRoom = import.meta.env.VITE_API_ENDPOINT + "room/";
 
 interface User {
   account_id?: number;
@@ -11,6 +12,14 @@ interface User {
 const AuthService = {
   login:  (user: User | null)=>{
     return axios.post(endpoint + "signin", user)
+    .then(response => {
+      return response.data;
+    });
+
+  },
+
+  signout:  (userId: any)=>{
+    return axios.post(endpointRoom + "signout", userId)
     .then(response => {
       return response.data;
     });

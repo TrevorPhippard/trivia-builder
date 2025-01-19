@@ -73,6 +73,9 @@ export const useEditorStore = defineStore("editor", {
 
     fetchGameFromDatabase(){
       EditorService.fetchTrivia().then(data=>{
+
+        console.log('fetchGameFromDatabase::',data)
+
         if(data.length){
           this.gameAr = data;
         }
@@ -91,8 +94,6 @@ export const useEditorStore = defineStore("editor", {
         }
       });
     },
-
-    
     createNewGame(){
           this.gameId = "";
           this.gameName= "";

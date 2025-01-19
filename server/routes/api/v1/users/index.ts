@@ -35,19 +35,18 @@ router.get("/:id", async (req:any, res:any) => {
         const query = {
             attributes: ["user_name", "email"],
             where: { user_name: req.params.id },
-            include: [
-                {
-                    model: accountModel,
-                    as: 'account',
-                    attributes: ["description", "avatar"]
-                },
-                {
-                    model: triviaModel,
-                    as: 'trivia',
-                    attributes: ["id", "owner", "trivia_name", "question_collection", "bg_bcolour", "text_colour"]
-                },
-            ]
-    
+            // include: [
+            //     {
+            //         model: accountModel,
+            //         as: 'account',
+            //         attributes: ["description", "avatar"]
+            //     },
+            //     {
+            //         model: triviaModel,
+            //         as: 'trivia',
+            //         attributes: ["id", "owner", "trivia_name", "question_collection", "bg_bcolour", "text_colour"]
+            //     },
+            // ]
         }
 
     try {

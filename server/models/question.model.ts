@@ -3,12 +3,17 @@ import { Model } from "sequelize";
 import connection from "../config/dbConnect";
 import questionSchema from "./schema/question";
 
+
+
+import Resource from "./resource.model"
+import Trivia from "./trivia.model";
+
 interface QuestionAttributes {
   id?: number,
 
   slide_rank: number,
   owner: number,
-  trivia: number,
+  trivia_id: number,
   category: number,
   type: string,
   question: string,
@@ -25,7 +30,7 @@ class Question extends Model<QuestionAttributes> {
   public id!: number;
   public slide_rank!: number
   public owner!: number
-  public trivia!: number
+  public trivia_id!: number
   public category!: number
   public type!: string
   public question!: string
@@ -44,5 +49,9 @@ Question.init(questionSchema, {
   modelName: 'Question',
   freezeTableName: true
 });
+
+// Question.belongsTo(Trivia, { foreignKey: 'trivia' });
+// Question.belongsTo(Resource, { foreignKey: 'bgImg' });
+
 
 export default Question

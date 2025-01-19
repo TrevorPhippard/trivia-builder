@@ -3,12 +3,15 @@ import { Model } from "sequelize";
 import connection from "../config/dbConnect";
 import roomSchema from "./schema/room";
 
+import User from './user.model';
+import Message from "./message.model"
+
 interface RoomAttributes {
   id?: number;
 
   socket_id: string;
-  owner: number;
-  user_collection: number;
+  user_id: number;
+  room_name: string;
 
   createdAt?: Date,
   updatedAt?: Date
@@ -17,9 +20,10 @@ interface RoomAttributes {
 class Room extends Model<RoomAttributes> {
 
   public id!: number;
+
   public socket_id!: string;
-  public owner!: number;
-  public user_collection!: number;
+  public user_id!: number;
+  public room_name!: string;
 
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
@@ -32,5 +36,9 @@ Room.init(roomSchema, {
   modelName: 'Room',
   freezeTableName: true
 });
+
+
+// Room.hasMany(Message, { foreignKey: 'room' });
+Room.belongsTo(User, { foreignKey: 'user_id' });
 
 export default Room

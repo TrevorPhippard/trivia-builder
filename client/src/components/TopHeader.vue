@@ -17,8 +17,10 @@ const router = useRouter();
 const { getUserInfo: userInfo } = storeToRefs(authStore)
 const { getInvitations: invitations } = storeToRefs(socketStore);
 
+
 function logout() {
   localStorage.removeItem("user");
+  authStore.signout(userInfo.value.id);
   router.push({ path: "/" })
 }
 

@@ -3,12 +3,14 @@ import { Model } from "sequelize";
 import connection from "../config/dbConnect";
 import triviaSchema from "./schema/trivia";
 
+import Question from "./question.model"
+import User from "./user.model"
+
 interface TriviaAttributes {
   id?: number;
 
   owner: number;
   trivia_name: string;
-  question_collection: string;
   bg_bcolour: string;
   text_colour: string;
 
@@ -21,7 +23,6 @@ class Trivia extends Model<TriviaAttributes> {
   public id!: number;
   public owner!: string;
   public trivia_name!: string;
-  public question_collection!: string;
   public bg_bcolour!: string;
   public text_colour!: string;
 
@@ -36,5 +37,8 @@ Trivia.init(triviaSchema, {
   modelName: 'Trivia',
   freezeTableName: true
 });
+
+// Trivia.belongsTo(User, { foreignKey: 'owner' });
+Trivia.hasMany(Question, { foreignKey: 'trivia' });
 
 export default Trivia

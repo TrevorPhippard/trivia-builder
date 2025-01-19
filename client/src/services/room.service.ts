@@ -5,8 +5,8 @@ const endpoint = import.meta.env.VITE_API_ENDPOINT + "room";
 interface roomData {
   id:	number;
   socket_id: string;
-  owner:	number;
-  user_collection:	number;
+  user_id:	number;
+  room_name:	string;
 }
 
 const EditorService = {

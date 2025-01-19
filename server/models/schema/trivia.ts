@@ -16,10 +16,6 @@ export default {
       allowNull: false,
       type: DataTypes.STRING
     },
-    question_collection: {
-      allowNull: false,
-      type: DataTypes.INTEGER
-    },
     bg_bcolour: {
       allowNull: false,
       type: DataTypes.STRING

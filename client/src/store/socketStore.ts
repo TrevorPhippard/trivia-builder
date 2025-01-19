@@ -23,11 +23,7 @@ declare global {
   }
 
 
-  interface messageType {
-    room_id: string;
-    user_id: string;
-    body_text: string;
-  }
+
 
   interface userPassageType {
     user_name: string;
@@ -48,43 +44,42 @@ export const useSocketStore = defineStore("sockets", {
     activeUsers: [] as any[],
     roomMessages: [] as any[],
     //channels
-    chat_room: "chat",
-    activeUsers_room: 0,
+    activeUsers_room: "active-users",
     gameRoom_id: "game-room",
     invitation: [] as any[]
   }),
   actions: {
-    initializeSocket(connectConfig: connectConfig) {
+    initializeSocket() {
       // eslint-disable-next-line @typescript-eslint/no-this-alias
       const storeRef = this;
 
-      SocketioService.setupSocketConnection(connectConfig);
+      SocketioService.setupSocketConnection(this.activeUsers_room);
       SocketioService.subscribeToSocketActions(this.socketActions);
       SocketioService.subscribeToMessages(function (_err, message) {
         return storeRef.roomMessages.push(message);
       });
 
-
-      MsgService.fetchMessages(connectConfig.room)
+      MsgService.fetchMessages(this.activeUsers_room)
         .then((msg: any) => {
           this.roomMessages = msg;
         });
     },
 
     joinRoom({ room, user_name, user_id }: connectConfig) {
-      console.log({room, user_name, user_id})
       SocketioService.joinRoom(room, user_name, user_id)
     },
 
     socketActions(_err: any, message: any) {
-      console.log(message.type)
+      console.log("Socket Message:",message)
       switch (message.type) {
         case "enteredRoom":
         case "join":
         case "disconnected":
           RoomService.fetchRoomById(this.activeUsers_room).then((activeUsers: any) => {
-            console.log({activeUsers: this.activeUsers})
             this.activeUsers = activeUsers;
+          }).catch(function (res) {
+            console.error(res)
+            // error.value = "error";
           });
           break;
         case "broadcast":
@@ -110,7 +105,6 @@ export const useSocketStore = defineStore("sockets", {
   },
   getters: {
     getEndPoint: state => state.socketEndpoint,
-    getChatroom: state => state.chat_room,
     getActiveRoom: state => state.activeUsers_room,
     getGameRoom: state => state.gameRoom_id,
     getUserList: state => state.activeUsers,

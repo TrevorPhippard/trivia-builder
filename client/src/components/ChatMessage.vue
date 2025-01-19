@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onUpdated } from "vue";
 import { storeToRefs } from "pinia";
 
 import { useAuthStore } from "../store/authStore.ts";
@@ -31,13 +31,17 @@ function submitMessage() {
 
   SocketioService.sendMessage(message, () => {
     inputMessageText.value = "";
-    scrollToBottom();
+    scrollToBottom()
   });
 }
 
 function scrollToBottom() {
   msg.value.scrollTop = msg.value.scrollHeight;
 }
+
+onUpdated(() => {
+  msg.value.scrollTop = msg.value.scrollHeight;
+})
 
 </script>
 <template>
