@@ -18,7 +18,7 @@ const route = useRoute();
 const router = useRouter();
 
 const { editorCurrentSlides: currentSlide} = storeToRefs(editorStore);
-const { getCurrentlySetGame: selectedGame } = storeToRefs(gameStore);
+const { getCurrentlySetGame: selectedGame, getGameUserList:gameList } = storeToRefs(gameStore);
 const { getUserList: userList }= storeToRefs(socketStore);
 
 const started = ref(false);
@@ -51,7 +51,7 @@ function quitGame(){
                   :lobby="true" />
     <hr/>
     <h2>Joined the game</h2>
-    <SocketUser v-for="(info, key) in userList" 
+    <SocketUser v-for="(info, key) in gameList" 
                   :key="key" 
                   :online="true" 
                   :info="info"

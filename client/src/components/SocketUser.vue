@@ -21,7 +21,7 @@ const { getUserInfo: userInfo } = storeToRefs(authStore)
 const { getCurrentlySetGame: room_id } = storeToRefs(gameStore);
 
 function inviteUserToPlay() {
-    if (typeof user == "string" && props.info && props.info.user_name) {
+    if ( props.info && props.info.User.user_name) {
         SocketioService.invite(
             props.info.user_name,
             userInfo.value.user_name,

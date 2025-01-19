@@ -19,10 +19,20 @@ function updateQuestion() {
 <template>
     <div v-if="props.slideData">
         <h4>Create Question</h4>
+        <section>
+         <label for="question">Type: </label>
+            <select name="" id="" disabled="disabled">
+                <option value="Multiple">Multiple Choice </option>
+            </select>
+        </section>
+        <hr/>
+        <section className="">
         <label for="question">Question: </label>
         <i>{{ props.slideData.question }}</i>
         <textarea v-model="questionText" name="question" rows="4" placeholder="write question here"
             @input="updateQuestion" />
+
+        </section>
         <CheckboxChoice :data="slideData" />
     </div>
 </template>
@@ -31,6 +41,11 @@ function updateQuestion() {
 h4 {
     margin-top: 0;
     margin-bottom: 10px;
+}
+
+hr{
+    margin-top:10px;
+    margin-bottom:10px;
 }
 
 textarea {

@@ -70,7 +70,6 @@ export const useSocketStore = defineStore("sockets", {
     },
 
     socketActions(_err: any, message: any) {
-      console.log("Socket Message:",message)
       switch (message.type) {
         case "enteredRoom":
         case "join":

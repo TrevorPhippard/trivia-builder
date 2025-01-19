@@ -28,7 +28,7 @@ class SocketioService {
     });
 
     this.joinRoom( room, userInfo.value.user_name, userInfo.value.id )
-    console.log(`Connecting socket...`, { token, room:room, user_name: userInfo.value.user_name});
+    console.log(`Connecting socket...`, { token: token.value, room:room, user_name: userInfo.value.user_name});
   }
 
   joinRoom(room: string, user_name: string, user_id: string) {
@@ -47,7 +47,6 @@ class SocketioService {
 
   subscribeToMessages(cb: (err: null, message: string) => void) {
     if (!this.socket) return (true);
-    console.log('subscribeToMessages')
     this.socket.on('messageFromServer', (msg: string) => cb(null, msg));
   }
 
