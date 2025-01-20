@@ -22,9 +22,6 @@ declare global {
     user_id: string;
   }
 
-
-
-
   interface userPassageType {
     user_name: string;
     type: string;
@@ -42,6 +39,7 @@ export const useSocketStore = defineStore("sockets", {
     token: import.meta.env.VITE_TOKEN,
     socketEndpoint: import.meta.env.VITE_SOCKET_ENDPOINT,
     activeUsers: [] as any[],
+    gameUsers:[] as any[],
     roomMessages: [] as any[],
     //channels
     activeUsers_room: "active-users",
@@ -66,19 +64,32 @@ export const useSocketStore = defineStore("sockets", {
     },
 
     joinRoom({ room, user_name, user_id }: connectConfig) {
-      SocketioService.joinRoom(room, user_name, user_id)
+      console.log('a:',room, user_name, user_id)
+      SocketioService.joinRoom({room, user_name, user_id})
     },
 
     socketActions(_err: any, message: any) {
       switch (message.type) {
         case "enteredRoom":
+          console.log('client enteredRoom message', message)
+          break;
         case "join":
+          if(message.join_info && message.join_info.room_id === this.activeUsers_room){
+            this.activeUsers = message.join_info.newList;
+console.log(message)
+            // this.activeUsers.forEach(x=> console.log(x.User.user_name))
+
+          } else{
+            console.log(message)
+            this.gameUsers = message.join_info.newList;
+          }
+          break;
         case "disconnected":
           RoomService.fetchRoomById(this.activeUsers_room).then((activeUsers: any) => {
+            console.log(activeUsers)
             this.activeUsers = activeUsers;
           }).catch(function (res) {
             console.error(res)
-            // error.value = "error";
           });
           break;
         case "broadcast":
@@ -88,16 +99,16 @@ export const useSocketStore = defineStore("sockets", {
             room: message.data.room_id
           })
           break;
+        case "message":
+            // console.log('message detected')
+            break;
         default:
           console.log("unexpected message type", message);
           break;
       }
     },
 
-    launchGame(room: string) {
-      this.activeUsers_room = room;
-      return gameService.launchGame(room)
-    },
+
     setGameByModel(id: string) {
       this.gameRoom_id = id;
     },
@@ -106,8 +117,10 @@ export const useSocketStore = defineStore("sockets", {
     getEndPoint: state => state.socketEndpoint,
     getActiveRoom: state => state.activeUsers_room,
     getGameRoom: state => state.gameRoom_id,
-    getUserList: state => state.activeUsers,
-    getMsgList: state => state.roomMessages,
-    getInvitations: state => state.invitation
+    getInvitations: state => state.invitation,
+    getGameUserList: state => state.gameUsers,
+    getActiveUserList: state => state.activeUsers,
+    getMsgList: state => state.roomMessages
+
   }
 })

@@ -11,7 +11,7 @@ import ChatMessage from "../components/ChatMessage.vue";
 const editorStore = useEditorStore();
 const socketStore =  useSocketStore();
 
-const {getUserList: userList, getMsgList: msgList } = storeToRefs(socketStore);
+const {getActiveUserList: activeUserList, getMsgList: msgList } = storeToRefs(socketStore);
 
 socketStore.initializeSocket();
 editorStore.fetchGameFromDatabase();
@@ -29,9 +29,9 @@ editorStore.fetchGameFromDatabase();
         <GameLauncher />
         <div class="community">
             <div>
-              <h3><span class="icons" id="icon-contacts">&#9814;</span>Activie Users: {{ userList.length }}</h3>
+              <h3><span class="icons" id="icon-contacts">&#9814;</span>Activie Users: {{ activeUserList.length }}</h3>
               <ul>
-                <SocketUser v-for="(info, key) in userList" 
+                <SocketUser v-for="(info, key) in activeUserList" 
                   :key="key" 
                   :online="true" 
                   :info="info"

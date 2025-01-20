@@ -18,8 +18,8 @@ const route = useRoute();
 const router = useRouter();
 
 const { editorCurrentSlides: currentSlide} = storeToRefs(editorStore);
-const { getCurrentlySetGame: selectedGame, getGameUserList:gameList } = storeToRefs(gameStore);
-const { getUserList: userList }= storeToRefs(socketStore);
+const { getCurrentlySetGame: selectedGame } = storeToRefs(gameStore);
+const { getActiveUserList: activeUserList }= storeToRefs(socketStore);
 
 const started = ref(false);
 
@@ -44,7 +44,8 @@ function quitGame(){
   <div v-if="!started" class="card-box">
     <h1>Lobby: {{ selectedGame }}</h1>
     <h2>Active Users</h2>
-    <SocketUser v-for="(info, key) in userList" 
+    {{ activeUserList }}
+    <SocketUser v-for="(info, key) in activeUserList" 
                   :key="key" 
                   :online="true" 
                   :info="info"

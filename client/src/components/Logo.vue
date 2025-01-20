@@ -35,7 +35,7 @@ h2 {
     text-align: right;
     text-transform: uppercase;
     text-shadow: 0px 5px 5px rgba(0, 0, 0, .5);
-    letter-spacing: .6em;
+    letter-spacing: 0.85em;
     margin-right: -1.2em;
     font-weight: 100;
 }

@@ -28,7 +28,9 @@ function joinGame() {
   if (lastInvitation) {
     const { room } = lastInvitation;
     editorStore.toggleModal(false);
-    SocketioService.joinRoom(room, user_name, id);
+    console.log('d:',room, user_name, id )
+
+    SocketioService.joinRoom({room, user_name, user_id:id});
     router.push({ path: `/game/${room}` });
   }
 }

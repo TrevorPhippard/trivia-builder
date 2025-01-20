@@ -77,7 +77,6 @@ h6 {
 
 .box {
   height: 200px;
-  border: solid 1px #000;
   display: flex;
   flex-direction: column;
 }
@@ -88,6 +87,7 @@ h6 {
   max-height: 90px;
   min-width: 20px;
   max-width: 600px;
+  
 }
 
 .messagesCont {
@@ -95,6 +95,7 @@ h6 {
   width: 100%;
   flex-grow: 1;
   text-align: left;
+  border: solid 1px var(--accent1);
   background-color: #ffffff;
   overflow-anchor: auto !important;
 }

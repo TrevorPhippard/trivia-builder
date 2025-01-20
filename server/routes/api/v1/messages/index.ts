@@ -21,6 +21,7 @@ router.get("/:room_id", async (req: any, res: any) => {
         const query = {
             where: { room_id: { [Op.eq]: room_id }, },
         }
+        console.log('D')
 
         const result = await Controller.getEntryByQuery(query);
 

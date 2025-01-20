@@ -42,7 +42,7 @@ h2 {
     line-height: .3;
     text-align: right;
     text-transform: uppercase;
-    letter-spacing: .6em;
+    letter-spacing: 0.75em;
     margin-right: -.4em;
     font-weight: 100;
 }

@@ -8,9 +8,9 @@ const MsgController = new BaseController(MsgModel);
 const RoomController = new BaseController(RoomModel);
 
 async function isAlready(user_id, room_id) {
-  const already = await RoomController.getEntryByQuery({
+  const already = RoomController.getEntryByQuery({
     where: {
-      [Op.and]: [{ user_id: user_id }, { room_name: room_id }],
+      [Op.and]: [{ user_id: user_id }, { room_name: String(room_id) }],
     },
   });
 
@@ -18,13 +18,19 @@ async function isAlready(user_id, room_id) {
 }
 
 export default function (io, socket) {
-  function getRoomEntries(room_id) {
-    return RoomController.getEntryByQuery({
-      where: { room_name: { [Op.eq]: room_id } },
+  async function getRoomEntries(room_id) {
+    var roomUsers = RoomController.getEntryByQuery({
+      where: { room_name: { [Op.eq]: String(room_id) } },
+      raw: true,
+      nest: true, // <--- The issue of raw true, will be solved by this
+      include: [{ all: true }],
     });
+
+    var sentData = roomUsers;
+    return sentData;
   }
 
-  async function onUserJoin({ room_id, user_id }) {
+  async function onUserJoin({ user_id, room_id }) {
     socket.join(room_id);
     var IsEntry = await isAlready(user_id, room_id);
 
@@ -44,27 +50,34 @@ export default function (io, socket) {
         roomObj,
       );
     }
+    var roomEntries = await getRoomEntries(room_id);
 
     io.to(room_id).emit('join', {
+      user_id: user_id,
+      room_id: room_id,
       msg: `${user_id} joined ${room_id}`,
-      newList: getRoomEntries(room_id),
+      newList: roomEntries,
     });
   }
 
-  function onEnteredRoom({ room_id }) {
-    io.to(room_id).emit('enteredRoom', getRoomEntries(room_id));
+  async function onEnteredRoom({ room_id, user_id, socketId }) {
+    var roomEntries = await getRoomEntries(room_id);
+    io.to(room_id).emit('enteredRoom', roomEntries);
   }
 
   function rmRoomEntry() {
+    console.log('-----------> RM', String(socket.id));
     return RoomController.removeEntryByQuery({
-      where: { socket_id: { [Op.eq]: socket.id } },
+      where: { socket_id: { [Op.eq]: String(socket.id) } },
     });
   }
 
-  function onLeave({ room_id }) {
+  async function onLeave({ room_id, user_id, socketId }) {
     rmRoomEntry();
     socket.leave(room_id);
-    io.to(room_id).emit('roomLeft', getRoomEntries(room_id));
+    var roomEntries = await getRoomEntries(room_id);
+
+    io.to(room_id).emit('roomLeft', roomEntries);
   }
 
   function onDisconnect(res) {

@@ -49,16 +49,16 @@ router.get("/:id", async (req:any, res:any) => {
             // ]
         }
 
-    try {
+    // try {
         const result = await Controller.getEntryByQuery(query)
         if (!result) {
             return res.status(404).send("item not found");
         } else {
             return res.json(result);
         }
-    } catch (error) {
-        return res.status(500).send(error);
-    }
+    // } catch (error) {
+    //     return res.status(500).send(error);
+    // }
 })
 
 // router.get("/:id", async (req:any, res:any) => {

@@ -1,5 +1,14 @@
 import { defineStore } from "pinia";
 import gameService from "../services/game.service"
+import SocketioService from "../services/socketio.service";
+
+function pictureDayPlease(){
+  const date = new Date();
+  const hour = date.getHours();
+  const min = date.getMinutes();
+  return hour+":"+min
+}
+
 
 export const useGameStore = defineStore("game", {
   state: () => ({
@@ -8,12 +17,14 @@ export const useGameStore = defineStore("game", {
     },
     selectedGame: '0',
     aSimpleTest: "test",
-    gameUsers: []
   }),
   actions: {
-    launchGame(room: string) {
-      return gameService.launchGame(room);
+    launchGameAction(room: string, user_id: string,user_name:string) {
+      console.log(pictureDayPlease())
+      console.log('b:',room, user_name, user_id)
 
+      SocketioService.joinRoom( {room, user_name, user_id} );
+      return gameService.launchGameService(room)
     },
     setGameFromURL(room_id: string) {
       this.selectedGame = room_id;
@@ -22,6 +33,5 @@ export const useGameStore = defineStore("game", {
   getters: {
     getGameData: state => state.gameData,
     getCurrentlySetGame: state => state.selectedGame,
-    getGameUserList: state => state.gameUsers,
   }
 })

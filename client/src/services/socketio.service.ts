@@ -27,11 +27,18 @@ class SocketioService {
       }
     });
 
-    this.joinRoom( room, userInfo.value.user_name, userInfo.value.id )
+
+    var roomData =  {
+      room,
+      user_name:userInfo.value.user_name,
+      user_id:userInfo.value.id
+    };
+
+    this.joinRoom(roomData )
     console.log(`Connecting socket...`, { token: token.value, room:room, user_name: userInfo.value.user_name});
   }
 
-  joinRoom(room: string, user_name: string, user_id: string) {
+  joinRoom({room, user_name, user_id}:any) {
     console.log('join', { room, user_name, user_id })
     this.socket.emit('leave', { room_id: room, user_id: user_id, socketId: this.socket.id });
     this.socket.emit('join', { room_id: room, user_id: user_id, user_name: user_name});
@@ -51,11 +58,10 @@ class SocketioService {
   }
 
   subscribeToSocketActions(cb: (err: null, message: object) => void) {
-
     if (!this.socket) return (true);
-    this.socket.on('join', (socketMsg: string) => cb(null, { user_name: socketMsg, type: 'join' }));
+    this.socket.on('join', (socketMsg: string) => cb(null, { join_info: socketMsg, type: 'join' }));
     this.socket.on('enteredRoom', (socketMsg: string) => cb(null, { userList: socketMsg, type: 'enteredRoom' }));
-    this.socket.on('messageFromServer', (socketMsg: string) => cb(null, { message: socketMsg, type: 'join' }));
+    this.socket.on('messageFromServer', (socketMsg: string) => cb(null, { message: socketMsg, type: 'message' }));
     this.socket.on('broadcast', (socketMsg: string) => cb(null, { data: socketMsg, type: 'broadcast' }));
     this.socket.on('disconnected', (socketMsg: string) => cb(null, { user_name: socketMsg, type: 'disconnected' }));
   }

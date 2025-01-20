@@ -36,8 +36,8 @@ function addGame() {
 }
 
 function onLaunchGame(index: string) {
-  editorStore.fetchGameById(index);
-  gameStore.launchGame(index);
+  editorStore.fetchGameById(String(index));
+  gameStore.launchGameAction(String(index), userInfo.value.id , userInfo.value.user_name);
 
   // SocketioService.joinRoom(index, user_name, id );
   router.push({ path: `/game/${index}` });
@@ -67,10 +67,10 @@ function onlyMyGames(gameList: any[]){
       <p>{{ info.trivia_name ? info.trivia_name : 'unnamed' }}</p>
       <ul>
         <li>updated: {{ (new Date(info.updatedAt)).toLocaleDateString('en-US') }}</li>
-        <li>id: {{ info.id }}</li>
-        <li><img :src="playCircle" alt="" @click="onLaunchGame(info.id)" /></li>
-        <li><img :src="edit" alt="" @click="goToEdit(info.id)" /></li>
-        <li><img :src="trash" alt="" @click="deleteGame(info.id)" /></li>
+        <li>id: {{ String(info.id) }}</li>
+        <li class="game-list-btn"><img :src="playCircle" alt="" @click="onLaunchGame(info.id)" /></li>
+        <li class="game-list-btn"><img :src="edit" alt="" @click="goToEdit(info.id)" /></li>
+        <li class="game-list-btn"><img :src="trash" alt="" @click="deleteGame(info.id)" /></li>
       </ul>
     </div>
   </div>
@@ -91,6 +91,7 @@ function onlyMyGames(gameList: any[]){
 .game-list {
   list-style: none;
   padding-left: 0px;
+  border-radius: 3px;
 }
 
 .game-list div {
@@ -100,25 +101,27 @@ function onlyMyGames(gameList: any[]){
   justify-content: space-between;
   align-items: center;
   margin-bottom: 10px;
-  padding: 2px 10px;
+  padding: 0px 10px;
 }
 
 .game-list div ul {
   display: flex;
+  align-items:center;
 }
 
 .game-list div ul li {
-  padding: 8px 10px;
+  padding: 4px 10px;
   cursor: pointer;
 }
 
-.game-list div ul li:hover {
+.game-list div ul li.game-list-btn:hover {
   background-color: var(--accent1);
   /* var(--accent-bg); */
 }
 
 .game-list div ul li img {
   width: 20px;
+  padding-top: 5px;
 }
 
 .game-list div ul li button {
