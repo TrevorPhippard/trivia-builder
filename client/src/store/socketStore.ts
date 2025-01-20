@@ -34,12 +34,12 @@ declare global {
   interface noArg { (): void }
 }
 
-  function getUsers(room,cb){
-    RoomService.fetchRoomById(room).then((activeUsers: any) => {
-      cb(activeUsers);
-    }).catch(function (res) {
-      console.error(res)
-    });
+function getUsers(room: string, cb: (arg0: any) => void) {
+  RoomService.fetchRoomById(room).then((activeUsers: any) => {
+    cb(activeUsers);
+  }).catch(function (res) {
+    console.error(res)
+  });
 }
 
 
@@ -48,25 +48,26 @@ export const useSocketStore = defineStore("sockets", {
   state: () => ({
     token: import.meta.env.VITE_TOKEN,
     socketEndpoint: import.meta.env.VITE_SOCKET_ENDPOINT,
-    activeUsers: [] as any[],
-    gameUsers:[] as any[],
+    socketInit: false,
     roomMessages: [] as any[],
     //channels
     activeUsers_room: "active-users",
-    gameRoom_id: "game-room",
-    invitation: [] as any[]
+    roomMgmt: {} as any,
+    invitation: [] as any[],
+    lastGameSet: false as any,
   }),
   actions: {
     initializeSocket() {
       // eslint-disable-next-line @typescript-eslint/no-this-alias
       const storeRef = this;
-
-      SocketioService.setupSocketConnection(this.activeUsers_room);
-      SocketioService.subscribeToSocketActions(this.socketActions);
-      SocketioService.subscribeToMessages(function (_err, message) {
-        return storeRef.roomMessages.push(message);
-      });
-
+      if (!this.socketInit) {
+        this.socketInit = true;
+        SocketioService.setupSocketConnection(this.activeUsers_room);
+        SocketioService.subscribeToSocketActions(this.socketActions);
+        SocketioService.subscribeToMessages(function (_err, message) {
+          return storeRef.roomMessages.push(message);
+        });
+      }
       MsgService.fetchMessages(this.activeUsers_room)
         .then((msg: any) => {
           this.roomMessages = msg;
@@ -74,78 +75,67 @@ export const useSocketStore = defineStore("sockets", {
     },
 
     joinRoom({ room, user_name, user_id }: connectConfig) {
-      SocketioService.joinRoom({room, user_name, user_id})
+      SocketioService.joinRoom({ room, user_name, user_id });
     },
 
-
-    setActiveUsers(arr:any){
-      this.activeUsers = arr
+    addToRoomMgmt(entry: any) {
+      if (this.roomMgmt[entry.room_name]) {
+        this.roomMgmt[entry.room_name].push({
+          id: entry.id,
+          user_name:  entry.User.user_name
+        })
+      }
     },
-    
-    setGameUsers(arr:any){
-      this.gameUsers = arr
+
+    setInvite(id:any){
+      this.lastGameSet = id
     },
 
     socketActions(_err: any, message: any) {
       switch (message.type) {
         case "enteredRoom":
-          console.log('client enteredRoom message', message)
+          this.roomMgmt[message.data.room_id] = []
+          message.data.roomEntries.forEach(this.addToRoomMgmt);
+
           break;
         case "join":
-          if(message.join_info){
-            // should get the same response from message but no time so this
-            getUsers(message.join_info.room_id,function(activeUsers:any){
-              if(message.join_info.room_id === this.activeUsers_room){
-                this.activeUsers = activeUsers;
-              }else{
-                this.gameRoom_id = message.join_info.room_id;
-                this.gameUsers = activeUsers;
-              }
-            }.bind(this))
-          }
-          console.log('gameUsers:',this.gameUsers)
-
+          this.roomMgmt[message.data.room_id] = []
+          message.data.roomEntries.forEach(this.addToRoomMgmt);
           break;
-        case "disconnected":
-            getUsers(this.activeUsers_room,function(activeUsers:any){
-              this.activeUsers = activeUsers;
-            }.bind(this))
-
-            getUsers(this.gameRoom_id,function(activeUsers:any){
-              this.gameUsers = activeUsers;
-            }.bind(this))
-
-        
+        case "leftRoom":
+          this.roomMgmt[message.data.room_id] = []
+          message.data.roomEntries.forEach(this.addToRoomMgmt);
           break;
         case "broadcast":
+
           this.invitation.push({
             to: message.data.to,
             from: message.data.from,
             room: message.data.room_id
           })
           break;
-        case "message":
-            // console.log('message detected')
-            break;
+        case "invite":
+          console.log('invite detected', message)
+          break;
+        case "disconnected":
+          if(this.roomMgmt && this.lastGameSet ){
+            const rmMatch = (item: any) => message.data.id !== item.id;
+            this.roomMgmt[this.lastGameSet] = this.roomMgmt[this.lastGameSet].filter(rmMatch );;
+          }
+          break;
         default:
           console.log("unexpected message type", message);
           break;
       }
     },
 
-
-    setGameByModel(id: string) {
-      this.gameRoom_id = id;
-    },
   },
   getters: {
     getEndPoint: state => state.socketEndpoint,
     getActiveRoom: state => state.activeUsers_room,
-    getGameRoom: state => state.gameRoom_id,
     getInvitations: state => state.invitation,
-    getGameUserList: state => state.gameUsers,
-    getActiveUserList: state => state.activeUsers,
+    getGameUserList: state => state.roomMgmt,
+    getActiveUserList: state => state.roomMgmt['active-users'],
     getMsgList: state => state.roomMessages
-
   }
 })

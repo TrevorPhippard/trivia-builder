@@ -28,7 +28,6 @@ const placeholderAvatar = "https://placeholder.pagebee.io/api/random/300/200"
 
 function ifNotification(requestedUser: string, room: string) {
   if (userInfo.value.user_name !== requestedUser) {
-    socketStore.setGameByModel(room);
     editorStore.toggleModal(true);
   }
 }

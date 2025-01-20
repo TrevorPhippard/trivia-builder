@@ -11,9 +11,11 @@ function onOptionClick(event: Event) {
 </script>
 
 <template>
+{{data}}
     <div class="imagecontainer" v-if="data" v-bind:style="{
         backgroundImage: `url(${data.bgImg}) `,
     }">
+      
         <h2>{{ data.question }}</h2>
         <ul>
             <li :class="{ 'answer-correct': option.correct }" @click="onOptionClick" :data-answer="option"

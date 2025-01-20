@@ -11,7 +11,8 @@ import SocketioService from "../services/socketio.service.js";
 const props = defineProps({
     online: Boolean,
     lobby: Boolean,
-    info: Object
+    info: Object,
+    room: String
 })
 
 const authStore = useAuthStore();
@@ -21,7 +22,7 @@ const { getUserInfo: userInfo } = storeToRefs(authStore)
 const { getCurrentlySetGame: room_id } = storeToRefs(gameStore);
 
 function inviteUserToPlay() {
-    if ( props.info && props.info.User.user_name) {
+    if ( props.info && props.info.user_name) {
         SocketioService.invite(
             props.info.user_name,
             userInfo.value.user_name,
@@ -33,8 +34,8 @@ function inviteUserToPlay() {
 }
 
 function isUserActive(){
-    if(props.info && props.info.User){
-        var name1 = props.info.User.user_name ;
+    if(props.info && props.room === 'active-users'){
+        var name1 = props.info.user_name ;
         var name2 = userInfo.value.user_name;
         return name1 === name2
     }else{
@@ -44,13 +45,14 @@ function isUserActive(){
 
 </script>
 <template>
+
     <li v-if="info && !isUserActive()">
         <div class="iconCont">
             <div>
                 <img class="userIcon" :src="user" alt="" />
                 <div :class="`status ${props.online ? 'online' : 'offline'}`"></div>
             </div>
-            <h2>{{ info.User.user_name }}</h2>
+            <h2>{{ info.user_name }}</h2>
         </div>
         <button class="addUserBtn" v-if="lobby" @click="inviteUserToPlay">
             <p>Add </p>

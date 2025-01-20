@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import gameService from "../services/game.service"
 import SocketioService from "../services/socketio.service";
 
-function pictureDayPlease(){
+function timeOfStart(){
   const date = new Date();
   const hour = date.getHours();
   const min = date.getMinutes();
@@ -20,9 +20,8 @@ export const useGameStore = defineStore("game", {
   }),
   actions: {
     launchGameAction(room: string, user_id: string,user_name:string) {
-      console.log(pictureDayPlease())
-      console.log('b:',room, user_name, user_id)
-
+      console.log(timeOfStart())
+      SocketioService.leaveRoom( {room:'active-users', user_id} );
       SocketioService.joinRoom( {room, user_name, user_id} );
       return gameService.launchGameService(room)
     },

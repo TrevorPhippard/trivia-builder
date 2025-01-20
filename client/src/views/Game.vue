@@ -6,8 +6,11 @@ import { storeToRefs } from "pinia";
 import { useEditorStore } from "../store/editorStore.ts";
 import { useSocketStore } from "../store/socketStore.ts";
 import { useGameStore  } from "../store/gameStore.ts";
+import { useAuthStore } from "../store/authStore.ts";
 
+import TopHeader from "../components/TopHeader.vue";
 import RoomService from "../services/room.service.js";
+import SocketioService from "../services/socketio.service.js";
 
 import SocketUser from "../components/SocketUser.vue";
 import GameSlide from "../components/GameSlide.vue"
@@ -15,12 +18,14 @@ import GameSlide from "../components/GameSlide.vue"
 const editorStore = useEditorStore();
 const socketStore = useSocketStore();
 const gameStore   = useGameStore();
-
+const authStore = useAuthStore();
 const route = useRoute();
 const router = useRouter();
 
 const { editorCurrentSlides: currentSlide} = storeToRefs(editorStore);
 const { getCurrentlySetGame: selectedGame } = storeToRefs(gameStore);
+const { getUserInfo: userInfo } = storeToRefs(authStore)
+
 const { getActiveUserList: activeUserList, getGameUserList:gameList }= storeToRefs(socketStore);
 
 const started = ref(false);
@@ -29,6 +34,8 @@ onMounted(function () {
     if(typeof route.params.id == "string" ){
         gameStore.setGameFromURL(route.params.id);
     }
+
+    socketStore.setInvite(route.params.id)
 })
 
 function startGame(){
@@ -37,35 +44,42 @@ function startGame(){
 }
 
 function quitGame(){
+  location.reload();
   router.push({ path: "/profile" });
 }
 
 </script>
 
-<template>
+<template>   
   <section class="flex">
   <div v-if="!started" class="card-box">
     <h1>Lobby: {{ selectedGame }}</h1>
+    {{ gameList }}
+
+
     <h2>Active Users</h2>
     <SocketUser v-for="(info, key) in activeUserList" 
                   :key="key" 
                   :online="true" 
                   :info="info"
-                  :lobby="true" />
+                  :lobby="true"
+                  :room="'active-users'"
+                  />
     <hr/>
     <h2>Joined the game</h2>
-    <SocketUser v-for="(info, key) in gameList" 
+    <SocketUser v-for="(info, key) in gameList[selectedGame]" 
                   :key="key" 
                   :online="true" 
                   :info="info"
-                  :lobby="true" />
+                  :lobby="false"
+                  :room="'game'"
+                  />
   <hr/>       
     <button @click="startGame">Start Game</button>
     <button @click="quitGame">Quit Game</button>
   </div>
 
   <div v-if="started" class="game card card-box">
-    {{ currentSlide }}
       <GameSlide :data="currentSlide"></GameSlide>
       <nav>
                 <ul>

@@ -7,117 +7,141 @@ import { Op } from 'sequelize';
 const MsgController = new BaseController(MsgModel);
 const RoomController = new BaseController(RoomModel);
 
-async function isAlready(user_id, room_id) {
-  const already = RoomController.getEntryByQuery({
-    where: {
-      [Op.and]: [{ user_id: user_id }, { room_name: String(room_id) }],
-    },
-  });
-
-  return already;
-}
-
 export default function (io, socket) {
-  async function getRoomEntries(room_id) {
-    var roomUsers = RoomController.getEntryByQuery({
-      where: { room_name: { [Op.eq]: String(room_id) } },
-      raw: true,
-      nest: true, // <--- The issue of raw true, will be solved by this
-      include: [{ all: true }],
-    });
+  /** --------------------------------------
+  ROOM Queries
+ -------------------------------------- */
 
-    var sentData = roomUsers;
-    return sentData;
+  async function isAlready(user_id) {
+    return RoomController.getEntryByQuery({
+      where: {
+        [Op.and]: [{ user_id: user_id }],
+      },
+    });
   }
 
-  async function onUserJoin({ user_id, room_id }) {
-    socket.join(room_id);
-    var IsEntry = await isAlready(user_id, room_id);
+  async function getRoomEntries(room_id) {
+    return RoomController.getEntryByQuery({
+      where: { room_name: { [Op.eq]: String(room_id) } },
+      raw: true,
+      nest: true,
+      include: [{ all: true }],
+    });
+  }
 
-    var roomObj = {
+  async function rmRoomEntry(id) {
+    return RoomController.removeEntryByQuery({
+      where: { socket_id: { [Op.eq]: id } },
+    });
+  }
+
+  async function queryBySocket(id) {
+    return RoomController.getEntryByQuery({
+      where: {
+        [Op.and]: [{ socket_id: id }],
+      },
+      raw: true,
+      nest: true,
+      include: [{ all: true }],
+    });
+  }
+
+  async function updateRoomEntry(user_id, roomObj) {
+    return RoomController.updateEntryByQuery(
+      {
+        where: { user_id: { [Op.eq]: user_id } },
+      },
+      roomObj,
+    );
+  }
+
+  /** --------------------------------------
+  Socket Event Handlers
+--------------------------------------*/
+
+  async function addOrUpdate(user_id, roomObj) {
+    const isEntry = await isAlready(user_id);
+    if (!isEntry.length) {
+      await RoomController.addEntry(roomObj);
+    } else {
+      await updateRoomEntry(user_id, roomObj);
+    }
+  }
+
+  async function onJoin({ user_id, room_id }) {
+    socket.join(room_id);
+
+    const roomObj = {
       socket_id: socket.id,
       user_id: user_id,
       room_name: room_id,
     };
 
-    if (!IsEntry.length) {
-      RoomController.addEntry(roomObj);
-    } else {
-      RoomController.updateEntryByQuery(
-        {
-          where: { user_id: { [Op.eq]: user_id } },
-        },
-        roomObj,
-      );
-    }
-    var roomEntries = await getRoomEntries(room_id);
+    await addOrUpdate(user_id, roomObj);
+
+    const roomEntries = await getRoomEntries(room_id);
 
     io.to(room_id).emit('join', {
-      user_id: user_id,
-      room_id: room_id,
-      msg: `${user_id} joined ${room_id}`,
-      newList: roomEntries,
+      desc: `${user_id} join ${room_id}`,
+      user_id,
+      room_id,
+      roomEntries: roomEntries,
     });
   }
 
-  async function onEnteredRoom({ room_id, user_id, socketId }) {
-    var roomEntries = await getRoomEntries(room_id);
-    io.to(room_id).emit('enteredRoom', roomEntries);
-  }
-
-  function rmRoomEntry() {
-    return RoomController.removeEntryByQuery({
-      where: { socket_id: { [Op.eq]: String(socket.id) } },
+  async function onEnteredRoom({ room_id, user_id }) {
+    const roomEntries = await getRoomEntries(room_id);
+    io.to(room_id).emit('enteredRoom', {
+      desc: `${user_id} entered ${room_id}`,
+      room_id,
+      roomEntries: roomEntries,
     });
   }
 
-  async function onLeave({ room_id, user_id, socketId }) {
+  async function onLeave({ room_id, user_id }) {
     socket.leave(room_id);
-    rmRoomEntry();
+    // await rmRoomEntry(String(socket.id));
+    const roomEntries = await getRoomEntries(room_id);
 
-    var roomEntries = await getRoomEntries(room_id);
-
-    io.to(room_id).emit('roomLeft', roomEntries);
+    io.to(room_id).emit('leftRoom', {
+      desc: `${user_id} leave ${room_id}`,
+      room_id,
+      roomEntries: roomEntries,
+    });
   }
 
-  function onDisconnect(res) {
-    rmRoomEntry();
-    io.emit('disconnected', res);
+  async function onDisconnect(res) {
+    var query = await queryBySocket(socket.id);
+
+    io.emit('disconnected', query[0]);
   }
 
   function onInvite({ to, from, room_id }) {
     socket.broadcast.emit('broadcast', { to, from, room_id });
   }
 
-  function onUserMessage({ room_id, user_id, body_text }, callback) {
-    var recievedMsgObj = {
+  function onMessage({ room_id, user_id, body_text }, callback) {
+    const receivedMsgObj = {
       room_id,
       user_id,
       body_text,
     };
 
-    MsgController.addEntry(recievedMsgObj);
-    io.to(room_id).emit('messageFromServer', recievedMsgObj);
+    MsgController.addEntry(receivedMsgObj);
+    io.to(room_id).emit('messageFromServer', receivedMsgObj);
 
     callback({ status: 'ok' });
   }
 
-  function onConnectToServer(data) {
-    data;
-  }
-  function handleErrors(err) {
-    err;
-  }
-
   return {
-    onConnectToServer,
-    onUserMessage,
-    onUserJoin,
+    // onConnectToServer,
+    // handleErrors,
+    onMessage,
+    onJoin,
     onLeave,
     onDisconnect,
     onEnteredRoom,
     onInvite,
-    handleErrors,
     isAlready,
   };
 }

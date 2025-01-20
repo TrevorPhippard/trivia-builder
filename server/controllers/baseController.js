@@ -47,7 +47,6 @@ export default class Controller {
   updateEntryByQuery = async (query, obj) => {
     const items = await this.model.findAll(query);
     const item = items[0];
-
     if (item == null) {
       return false;
     } else {

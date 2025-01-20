@@ -8,8 +8,7 @@ const GameService = {
         return response.data;
       });
   },
-  quitGame:()=>{
-  }
+
 }
 
 export default GameService;
