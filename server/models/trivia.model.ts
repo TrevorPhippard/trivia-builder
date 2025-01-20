@@ -39,6 +39,6 @@ Trivia.init(triviaSchema, {
 });
 
 // Trivia.belongsTo(User, { foreignKey: 'owner' });
-Trivia.hasMany(Question, { foreignKey: 'trivia' });
+Trivia.hasMany(Question, { foreignKey: 'trivia_id' });
 
 export default Trivia

@@ -17,17 +17,12 @@ const router = express.Router();
 router.get("/:user_name", async (req: any, res: any) => {
 
     const query = {
+        attributes: ["trivia_name","question_collection"],
         include: [
             {
                 model: questionModel,
-                as: 'User',
-                // attributes: [ "user_name"],
+                as: 'Questions',
             },
-            // {
-            //     model: userModel,
-            //     as: 'User',
-            //     attributes: [ "user_name"],
-            // }
         ]
     }
     const result = await triviaModel.findAll(query)

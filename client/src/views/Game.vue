@@ -33,6 +33,7 @@ onMounted(function () {
 
 function startGame(){
   console.log("hopefully this is the easy part")
+  started.value = true;
 }
 
 function quitGame(){
@@ -64,6 +65,7 @@ function quitGame(){
   </div>
 
   <div v-if="started" class="game card card-box">
+    {{ currentSlide }}
       <GameSlide :data="currentSlide"></GameSlide>
       <nav>
                 <ul>

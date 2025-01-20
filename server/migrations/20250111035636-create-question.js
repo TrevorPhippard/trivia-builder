@@ -16,7 +16,7 @@ module.exports = {
       owner: {
         type: Sequelize.STRING,
       },
-      trivia: {
+      trivia_id: {
         type: Sequelize.INTEGER,
       },
       category: {

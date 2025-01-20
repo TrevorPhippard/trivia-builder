@@ -1,6 +1,7 @@
 import express from "express";
 import Model from "../../../../models/trivia.model";
 import BaseController from "../../../../controllers/baseController";
+import questionModel from "../../../../models/question.model";
 
 const Controller = new BaseController(Model);
 
@@ -27,8 +28,19 @@ router.post("/", async (req: any, res: any) => {
 
 router.get("/:id", async (req: any, res: any) => {
     // try {
-    const id = req.params.id;
-    const result = await Controller.getEntryById(id)
+
+    const query = {
+        where: { id: req.params.id },
+        attributes: ["trivia_name","question_collection"],
+        include: [
+            {
+                model: questionModel,
+                as: 'Questions',
+            },
+        ]
+    }
+
+    const result = await Controller.getEntryByQuery(query);
     if (!result) {
         return res.status(404).send("item not found");
     } else {

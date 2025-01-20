@@ -35,6 +35,6 @@ Resource.init(resourceSchema, {
 });
 
 // Resource.belongsTo(User, { foreignKey: 'owner' });
-Resource.hasMany(Question, { foreignKey: 'file_name' });
+Resource.hasMany(Question, { foreignKey: 'bgImg' });
 
 export default Resource
