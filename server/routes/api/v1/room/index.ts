@@ -51,9 +51,13 @@ router.get("/:room_id", async (req: any, res: any) => {
     // try {
         const room_id = req.params.room_id;
 
+        console.log(room_id)
         const query = {
-            attributes: [ "updatedAt"],
-            room_name: { [Op.eq]: room_id },
+            attributes: [ ],
+            where: {
+                room_name: { [Op.eq]: room_id },
+
+            },
             include: [
                 {
                     model: userModel,

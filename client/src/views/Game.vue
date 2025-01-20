@@ -7,6 +7,8 @@ import { useEditorStore } from "../store/editorStore.ts";
 import { useSocketStore } from "../store/socketStore.ts";
 import { useGameStore  } from "../store/gameStore.ts";
 
+import RoomService from "../services/room.service.js";
+
 import SocketUser from "../components/SocketUser.vue";
 import GameSlide from "../components/GameSlide.vue"
 
@@ -19,7 +21,7 @@ const router = useRouter();
 
 const { editorCurrentSlides: currentSlide} = storeToRefs(editorStore);
 const { getCurrentlySetGame: selectedGame } = storeToRefs(gameStore);
-const { getActiveUserList: activeUserList }= storeToRefs(socketStore);
+const { getActiveUserList: activeUserList, getGameUserList:gameList }= storeToRefs(socketStore);
 
 const started = ref(false);
 
@@ -44,7 +46,6 @@ function quitGame(){
   <div v-if="!started" class="card-box">
     <h1>Lobby: {{ selectedGame }}</h1>
     <h2>Active Users</h2>
-    {{ activeUserList }}
     <SocketUser v-for="(info, key) in activeUserList" 
                   :key="key" 
                   :online="true" 

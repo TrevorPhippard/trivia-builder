@@ -33,7 +33,7 @@ function inviteUserToPlay() {
 }
 
 function isUserActive(){
-    if(props.info){
+    if(props.info && props.info.User){
         var name1 = props.info.User.user_name ;
         var name2 = userInfo.value.user_name;
         return name1 === name2

@@ -66,15 +66,15 @@ export default function (io, socket) {
   }
 
   function rmRoomEntry() {
-    console.log('-----------> RM', String(socket.id));
     return RoomController.removeEntryByQuery({
       where: { socket_id: { [Op.eq]: String(socket.id) } },
     });
   }
 
   async function onLeave({ room_id, user_id, socketId }) {
-    rmRoomEntry();
     socket.leave(room_id);
+    rmRoomEntry();
+
     var roomEntries = await getRoomEntries(room_id);
 
     io.to(room_id).emit('roomLeft', roomEntries);

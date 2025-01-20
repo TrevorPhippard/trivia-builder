@@ -34,6 +34,16 @@ declare global {
   interface noArg { (): void }
 }
 
+  function getUsers(room,cb){
+    RoomService.fetchRoomById(room).then((activeUsers: any) => {
+      cb(activeUsers);
+    }).catch(function (res) {
+      console.error(res)
+    });
+}
+
+
+
 export const useSocketStore = defineStore("sockets", {
   state: () => ({
     token: import.meta.env.VITE_TOKEN,
@@ -64,8 +74,16 @@ export const useSocketStore = defineStore("sockets", {
     },
 
     joinRoom({ room, user_name, user_id }: connectConfig) {
-      console.log('a:',room, user_name, user_id)
       SocketioService.joinRoom({room, user_name, user_id})
+    },
+
+
+    setActiveUsers(arr:any){
+      this.activeUsers = arr
+    },
+    
+    setGameUsers(arr:any){
+      this.gameUsers = arr
     },
 
     socketActions(_err: any, message: any) {
@@ -74,23 +92,30 @@ export const useSocketStore = defineStore("sockets", {
           console.log('client enteredRoom message', message)
           break;
         case "join":
-          if(message.join_info && message.join_info.room_id === this.activeUsers_room){
-            this.activeUsers = message.join_info.newList;
-console.log(message)
-            // this.activeUsers.forEach(x=> console.log(x.User.user_name))
-
-          } else{
-            console.log(message)
-            this.gameUsers = message.join_info.newList;
+          if(message.join_info){
+            // should get the same response from message but no time so this
+            getUsers(message.join_info.room_id,function(activeUsers:any){
+              if(message.join_info.room_id === this.activeUsers_room){
+                this.activeUsers = activeUsers;
+              }else{
+                this.gameRoom_id = message.join_info.room_id;
+                this.gameUsers = activeUsers;
+              }
+            }.bind(this))
           }
+          console.log('gameUsers:',this.gameUsers)
+
           break;
         case "disconnected":
-          RoomService.fetchRoomById(this.activeUsers_room).then((activeUsers: any) => {
-            console.log(activeUsers)
-            this.activeUsers = activeUsers;
-          }).catch(function (res) {
-            console.error(res)
-          });
+            getUsers(this.activeUsers_room,function(activeUsers:any){
+              this.activeUsers = activeUsers;
+            }.bind(this))
+
+            getUsers(this.gameRoom_id,function(activeUsers:any){
+              this.gameUsers = activeUsers;
+            }.bind(this))
+
+        
           break;
         case "broadcast":
           this.invitation.push({
