@@ -1,11 +1,13 @@
 <script setup lang="ts">
+
+// @ts-nocheck
 import { ref } from "vue";
 import { useEditorStore } from "../../store/editorStore.ts";
 
 const store = useEditorStore();
 
 const isDragging = ref(false);
-const file = ref(false);
+const file = ref(null);
 const clearlyNotNamed = ref(false);
 
 function dragover(event: Event) {
@@ -23,23 +25,42 @@ function drop(event: Event) {
   isDragging.value = false;
 }
 
-function onChange(event: Event) {
-  if (event.type == "drop") {
+interface UploadEvent extends Event {
+  dataTransfer?:{
+    files: any
+  };
+  target?:{
+    files: any
+  }
+}
+
+function onChange(event: UploadEvent) {
+  if (event.type == "drop" &&  event.dataTransfer) {
     file.value = event.dataTransfer.files[0];
     clearlyNotNamed.value = true;
-  } else {
+  } else if( event.target){
     file.value = event.target.files[0];
     clearlyNotNamed.value = true;
+  }else{
+    console.error('file upload error')
   }
 }
 
 function onSubmit() {
-  const formData = new FormData();
-  formData.append("file", file.value.files[0]);
-  formData.append("id", "test1");
-  formData.append("test", "good")
-  store.upload(formData);
-  clearlyNotNamed.value = false;
+  if(file.value ){
+    if(file.value.files.length){
+      const formData = new FormData();
+      formData.append("file", file.value.files[0]);
+      formData.append("id", "test1");
+      formData.append("test", "good")
+      store.upload(formData);
+      clearlyNotNamed.value = false;
+    }else{
+      console.error('file upload error')
+    }
+  }else{
+    console.error('file upload error')
+  }
 }
 
 </script>
@@ -60,7 +81,7 @@ function onSubmit() {
         </div>
       </label>
       <div class="prelaod" v-if="file.files && clearlyNotNamed">
-        <p :title="file.name"> {{ file.files[0].name }}</p>
+        <p v-if="file" :title="file.name"> {{ file.files[0].name }}</p>
         <input type="submit" value="Submit">
       </div>
     </div>

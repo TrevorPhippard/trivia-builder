@@ -21,7 +21,7 @@ function updateQuestion() {
         <h4>Create Question</h4>
         <section>
          <label for="question">Type: </label>
-            <select name="" id="" disabled="disabled">
+            <select name="" id="" :disabled="true">
                 <option value="Multiple">Multiple Choice </option>
             </select>
         </section>

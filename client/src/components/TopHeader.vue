@@ -26,7 +26,7 @@ function logout() {
 
 const placeholderAvatar = "https://placeholder.pagebee.io/api/random/300/200"
 
-function ifNotification(requestedUser: string, room: string) {
+function ifNotification(requestedUser: string, _room: string) {
   if (userInfo.value.user_name !== requestedUser) {
     editorStore.toggleModal(true);
   }

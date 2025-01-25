@@ -3,10 +3,10 @@ import AuthService from "../services/auth.service"
 import RoomService from "../services/room.service.js";
 
 interface User {
+  account_id?: number;
   email: string;
   password: string;
   user_name?: string;
-  account_id?: string;
 }
 
 interface UserType {

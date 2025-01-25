@@ -20,6 +20,8 @@ function submitToken() {
     "password": password.value
   }
 
+  
+
   authStore.register(formData).then(function () {
       return authStore.login(formData)
   }).then(function () {

@@ -1,8 +1,6 @@
 import { defineStore } from "pinia";
 
-import gameService from "../services/game.service"
 import SocketioService from "../services/socketio.service.js";
-import RoomService from "../services/room.service.js";
 import MsgService from "../services/msg.service.js";
 
 
@@ -34,15 +32,13 @@ declare global {
   interface noArg { (): void }
 }
 
-function getUsers(room: string, cb: (arg0: any) => void) {
-  RoomService.fetchRoomById(room).then((activeUsers: any) => {
-    cb(activeUsers);
-  }).catch(function (res) {
-    console.error(res)
-  });
-}
-
-
+// function getUsers(room: string, cb: (arg0: any) => void) {
+//   RoomService.fetchRoomById(room).then((activeUsers: any) => {
+//     cb(activeUsers);
+//   }).catch(function (res) {
+//     console.error(res)
+//   });
+// }
 
 export const useSocketStore = defineStore("sockets", {
   state: () => ({

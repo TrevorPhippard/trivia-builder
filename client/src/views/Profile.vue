@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { onMounted} from "vue"
 import { storeToRefs } from "pinia";
 import { useEditorStore } from "../store/editorStore.ts";
 import { useSocketStore } from "../store/socketStore.ts";
@@ -20,6 +19,7 @@ const {getActiveUserList: activeUserList, getMsgList: msgList } = storeToRefs(so
 const { getUserInfo: userInfo, getToken: token } = storeToRefs(authStore)
 
 var roomData =  {
+      token:String(token),
       room:'active-users',
       user_name:userInfo.value.user_name,
       user_id:userInfo.value.id

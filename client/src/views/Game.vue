@@ -6,11 +6,10 @@ import { storeToRefs } from "pinia";
 import { useEditorStore } from "../store/editorStore.ts";
 import { useSocketStore } from "../store/socketStore.ts";
 import { useGameStore  } from "../store/gameStore.ts";
-import { useAuthStore } from "../store/authStore.ts";
 
-import TopHeader from "../components/TopHeader.vue";
-import RoomService from "../services/room.service.js";
-import SocketioService from "../services/socketio.service.js";
+// import TopHeader from "../components/TopHeader.vue";
+// import RoomService from "../services/room.service.js";
+// import SocketioService from "../services/socketio.service.js";
 
 import SocketUser from "../components/SocketUser.vue";
 import GameSlide from "../components/GameSlide.vue"
@@ -18,13 +17,12 @@ import GameSlide from "../components/GameSlide.vue"
 const editorStore = useEditorStore();
 const socketStore = useSocketStore();
 const gameStore   = useGameStore();
-const authStore = useAuthStore();
+
 const route = useRoute();
 const router = useRouter();
 
 const { editorCurrentSlides: currentSlide} = storeToRefs(editorStore);
 const { getCurrentlySetGame: selectedGame } = storeToRefs(gameStore);
-const { getUserInfo: userInfo } = storeToRefs(authStore)
 
 const { getActiveUserList: activeUserList, getGameUserList:gameList }= storeToRefs(socketStore);
 

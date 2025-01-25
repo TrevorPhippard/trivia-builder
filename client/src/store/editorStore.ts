@@ -16,6 +16,16 @@ const blankSlides = {
   bgImg: import.meta.env.VITE_BASE_ENDPOINT + "images/img-0906.jpg"
 };
 
+
+interface triviaData {
+  owner:	number;
+  trivia_name:	string;
+  question_collection:	number;
+  bg_bcolour:	string;
+  text_colour:	string;
+}
+
+
 export const useEditorStore = defineStore("editor", {
   state: () => ({
     gameId:"",
@@ -27,7 +37,6 @@ export const useEditorStore = defineStore("editor", {
   }),
 
   actions: {
-
     blankSlideInfo() {
       return {
         name: "slide " + (Number(this.slides.length) + 1),
@@ -42,12 +51,7 @@ export const useEditorStore = defineStore("editor", {
       this.gameName = name
     },
 
-    saveGameToDatabase(){
-      const sendData = {
-        gameName:this.gameName,
-        user_name:"editor",
-        slides:JSON.stringify(this.slides),
-      }
+    saveGameToDatabase(sendData:triviaData){
 
       if(this.gameId){
         EditorService.updateTrivia(sendData, this.gameId)

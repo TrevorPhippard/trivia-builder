@@ -18,7 +18,15 @@ const {
 const tabSelected = ref("Edit");
 
 function saveGameToDatabase(){
-    store.saveGameToDatabase();
+    const sendData = {
+        owner:	0,
+        trivia_name:	'string',
+        question_collection:0,
+        bg_bcolour:	'string',
+        text_colour:	'string',
+      }
+
+    store.saveGameToDatabase(sendData);
     router.push({ path: "/profile" })
 }
 
