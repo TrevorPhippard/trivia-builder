@@ -58,7 +58,6 @@ export const useSocketStore = defineStore("sockets", {
   }),
   actions: {
     initializeSocket() {
-      // eslint-disable-next-line @typescript-eslint/no-this-alias
       const storeRef = this;
       if (!this.socketInit) {
         this.socketInit = true;
