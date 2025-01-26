@@ -32,9 +32,6 @@ jobs:
     - name: Run tests
       run: npm test
 
-    - name: Package the app
-      run: npm run package # This should package your app if necessary
-
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
       with:
