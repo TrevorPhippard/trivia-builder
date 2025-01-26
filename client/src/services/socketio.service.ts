@@ -22,6 +22,7 @@ class SocketioService {
     this.socket = io(import.meta.env.VITE_SOCKET_ENDPOINT, {
       auth: { token: token.value },
       withCredentials: true,
+      path: "/clients/socketio/hubs/Hub",
       extraHeaders: {
         "socket-header": "abcd"
       }

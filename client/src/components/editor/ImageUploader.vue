@@ -66,7 +66,7 @@ function onSubmit() {
 </script>
 <template>
   <h4>background image:
-    <i v-if="file.files && file.files[0] && !clearlyNotNamed">{{ file.files[0].name }}</i>
+    <i v-if="file && file.files && file.files[0] && !clearlyNotNamed">{{ file.files[0].name }}</i>
   </h4>
   <form @submit.prevent="onSubmit" enctype="multipart/form-data">
     <div class="dropzone-container" @dragover="dragover" @dragleave="dragLeave" @drop="drop">
@@ -80,7 +80,7 @@ function onSubmit() {
           <a class="button">browse files</a>
         </div>
       </label>
-      <div class="prelaod" v-if="file.files && clearlyNotNamed">
+      <div class="prelaod" v-if="file && file.files && clearlyNotNamed">
         <p v-if="file" :title="file.name"> {{ file.files[0].name }}</p>
         <input type="submit" value="Submit">
       </div>

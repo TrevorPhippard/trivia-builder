@@ -1,18 +1,26 @@
-import { Sequelize } from 'sequelize';
+import {  Sequelize } from 'sequelize';
+import databaseConfig from './database'
 
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-const pgName = process.env.PG_NAME as string;
-const pgHost = process.env.PG_HOST;
-const pgusername = process.env.PG_USERNAME as string;
-const pgPassword = process.env.PG_PASSWORD;
-const pgDialect = 'postgres';
 
-const sequelizeConnection = new Sequelize(pgName, pgusername, pgPassword, {
-  host: pgHost,
-  dialect: pgDialect,
-});
+
+const env =  process.env.NODE_ENV ||  "development";
+const config =  databaseConfig[env];
+
+let sequelizeConnection;
+
+
+if (process.env.DATABASE_URL) {
+   sequelizeConnection = new Sequelize(process.env.DATABASE_URL);
+} else {
+   sequelizeConnection = new Sequelize(config.database, config.username, config.password,  {
+    host: config.host,
+    dialect: config.dialect,
+  })
+}
+
 
 export default sequelizeConnection;

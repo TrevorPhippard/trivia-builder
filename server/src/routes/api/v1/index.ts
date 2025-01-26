@@ -12,7 +12,7 @@ import users from './users';
 
 const router = express.Router();
 
-router.get('/', (req: any, res: any) => {
+router.get('/', (_req: any, res: any) => {
   res.send('/api/v1 is working!');
 });
 

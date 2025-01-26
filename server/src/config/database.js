@@ -2,16 +2,16 @@
 /* eslint-disable no-undef */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
-const dotenv = require('dotenv');
+import dotenv from 'dotenv';
 
 dotenv.config();
 
-module.exports = {
+export default {
   development: {
-    username: process.env.PG_USERNAME,
-    password: process.env.PG_PASSWORD,
-    database: process.env.PG_NAME,
-    host: process.env.PG_HOST,
+    username: 'postgres',
+    password: 'checkenvfile',
+    database: 'trivia_builder_database',
+    host: '127.0.0.1',
     dialect: 'postgres',
   },
   test: {
@@ -22,10 +22,10 @@ module.exports = {
     dialect: 'postgres',
   },
   production: {
-    username: 'root',
-    password: null,
-    database: 'database_production',
-    host: '127.0.0.1',
-    dialect: 'postgres',
+    username: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    host: process.env.DB_HOST,
+    dialect: process.env.DB_DIALECT,
   },
 };

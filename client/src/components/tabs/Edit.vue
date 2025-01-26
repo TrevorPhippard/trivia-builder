@@ -26,7 +26,7 @@ function updateGameName(value: string) {
         <Sortable :itemsContent="slides"></Sortable>
     </div>
     <div class="col">
-        <h3>{{ currentSlide.name }}</h3>
+        <h3 v-if="currentSlide">{{ currentSlide.name }}</h3>
         <hr />
         <ImageUploader />
         <br />

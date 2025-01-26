@@ -1,20 +1,38 @@
 {
   "compilerOptions": {
-    "moduleResolution": "node",
     "target": "es6",
     "module": "commonjs",
     "lib": ["esnext"],
-    "strict": true,
     "sourceMap": true,
-    "declaration": true,
+    "outDir": "dist",
+    "rootDir": ".",
+
+    "skipLibCheck": true,
     "esModuleInterop": true,
+    "allowJs": true,
+    "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
+    "moduleDetection": "force",
+    "isolatedModules": true,
+
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+
+    "removeComments": true,
+    "noImplicitAny": false,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "noImplicitThis": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "declarationDir": "./dist",
-    "outDir": "./dist",
     "typeRoots": ["node_modules/@types"]
   },
-  "include": ["src", "src/app.tsconfig.js", "eslint.config.mjs", "app.ts"],
+  "include": ["./src/**/*.tsx", "./src/**/*.ts"],
   "exclude": ["node_modules"]
 }

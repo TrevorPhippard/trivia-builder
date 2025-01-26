@@ -12,6 +12,7 @@ import socketRoutes from './routes/api/v1/socket';
 import { Server } from 'socket.io';
 import { instrument } from '@socket.io/admin-ui';
 import routes from './routes';
+import { useAzureSocketIO } from "@azure/web-pubsub-socket.io";
 
 dotEnv.config();
 
@@ -55,7 +56,7 @@ app.use(
 app.use('/', routes);
 
 app.use(function (req: any, res: any) {
-  console.log(req.originalUrl);
+  console.log('originalUrl:',req.originalUrl);
   res.status(404).send({
     url: req.originalUrl + ' not found',
   });
@@ -67,6 +68,8 @@ app.use(function (req: any, res: any) {
 
 const socketServer = createServer(app);
 
+
+
 const io = new Server(socketServer, {
   cors: {
     origin: 'http://localhost:8080',
@@ -76,6 +79,17 @@ const io = new Server(socketServer, {
   },
   allowEIO3: true,
 });
+
+
+// Use the following line to integrate with Web PubSub for Socket.IO
+if(process.env.NODE_ENV ===  "production"){
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
+  useAzureSocketIO(io, {
+    hub: "Hub", // The hub name can be any valid string.
+    connectionString: process.argv[2]
+  });
+}
 
 instrument(io, {
   auth: false,

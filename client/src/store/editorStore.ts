@@ -4,8 +4,6 @@ import { defineStore } from "pinia";
 import UploadService from "../services/upload.service";
 import EditorService from "../services/editor.service"
 
-
-
 const blankSlides = {
   name: "slide 1",
   type: "checkbox",
@@ -13,7 +11,7 @@ const blankSlides = {
   options: [
     { choice: "", correct: false },
   ],
-  bgImg: import.meta.env.VITE_BASE_ENDPOINT + "images/img-0906.jpg"
+  bgImg: import.meta.env.VITE_BASE_ENDPOINT + "images/default-bg.png"
 };
 
 

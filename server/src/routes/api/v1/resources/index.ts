@@ -6,7 +6,7 @@ const Controller = new BaseController(Model);
 
 const router = express.Router();
 
-router.get('/', async (req: any, res: any) => {
+router.get('/', async (_req: any, res: any) => {
   try {
     const entries = await Controller.getAllEntries();
     return res.json(entries);

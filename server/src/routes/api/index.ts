@@ -3,7 +3,7 @@ import v1 from './v1';
 
 const router = express.Router();
 
-router.get('/', (req: any, res: any) => {
+router.get('/', (_req: any, res: any) => {
   res.send('/api is working!');
 });
 
