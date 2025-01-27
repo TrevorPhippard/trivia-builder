@@ -32,6 +32,12 @@ jobs:
     - name: Run tests
       run: npm test
 
+    - name: Run Table Creation
+      run: npm run db:create
+
+    - name: Run Migration
+      run: npm run db:migrate
+
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
       with:
