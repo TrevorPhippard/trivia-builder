@@ -87,7 +87,7 @@ if(process.env.NODE_ENV ===  "production"){
 // @ts-expect-error
   useAzureSocketIO(io, {
     hub: "Hub", // The hub name can be any valid string.
-    connectionString: process.argv[2]
+    connectionString: process.env.CONNECTIONSTRING
   });
 }
 

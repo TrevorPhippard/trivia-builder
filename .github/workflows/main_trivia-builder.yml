@@ -44,8 +44,30 @@ jobs:
     - name: Deploy to Azure Web App
       id: deploy-to-webapp
       uses: azure/webapps-deploy@v2
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build the application
+      run: npm run build
+
+    - name: Run tests
+      run: npm test
+
+    - name: Run Table Creation
+      run: npm run db:create
+
+    - name: Run Migration
+      run: npm run db:migrate
+
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v2
+
       with:
         app-name: 'trivia-builder'
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_21f0fee86e024b20b340e14edb04a856 }}
         images: 'triviabuildercontainer.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_48dc060896c34da8bf33de49c1c951b6 }}/node-test:${{ github.sha }}'
+
+
+    
